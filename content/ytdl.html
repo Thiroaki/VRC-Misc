@@ -1,0 +1,55 @@
+<div class="main-content">
+    <div class="main-section">
+        <div class="label">
+            <span>バージョン情報</span>
+        </div>
+        <div class="content-item">
+            <div class="text">
+                最新 : <span id="remotever"></span><br>
+                ローカル : <span id="localver"></span>
+            </div>
+            <div style="text-align: right;">
+                <button>youtube-dl更新</button>
+            </div>            
+        </div>
+    </div>
+    <div class="main-section">
+            <div class="label">
+                <span>定期実行</span>
+            </div>
+            <div class="content-item">
+                <div>
+                    <div class="text">現在の設定</div>
+                    <div class="text"  style="padding: 0.25rem;font-size: 0.95rem;">
+                        間隔：<span>毎月1回　　</span>
+                    </div>
+                </div>
+                <br>
+                <div class="text">
+                    <div class="mb-2">
+                        <select class="asd" id="month">
+                            <option value="m">毎月</option>
+                            <option value="w">毎週</option>
+                            <option value="d">毎日</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <select id="hour">
+
+                        </select>
+                        <select id="minute">
+
+                        </select>
+                        <span>に更新</span>
+                    </div>
+                    <div >
+                        <button id="regist">登録</button>
+                        <button id="unregist">登録解除</button>
+                    </div>
+                    
+                </div>            
+            </div>
+        </div>
+</div>
+
+<script src="./content/js/ytdl.js"></script>
