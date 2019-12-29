@@ -13,18 +13,21 @@ module.exports = class CacheView{
     }
 
     setUiEvents(){
-        // for(let i=0; i<24; i++){
-        //     $("#hour").append("<option value="+i+">"+i+"時</option>");
-        // }
-        // for(let i=0; i<60; i+=10){
-        //     $("#minute").append("<option value="+i+">"+i+"分</option>");
-        // }
-    
         $(document).on("click", "#clear-now", ()=>{
             this.onCacheDeleteButtonPress();
         });
 
         console.log("called setUiEvents");
+    }
+
+    setView(){
+        for(let i=0; i<24; i++){
+            $("#hour").append("<option value="+i+">"+i+"時</option>");
+        }
+        for(let i=0; i<60; i+=10){
+            $("#minute").append("<option value="+i+">"+i+"分</option>");
+        }
+    
     }
 
     setCacheInfo(count, size){

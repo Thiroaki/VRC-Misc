@@ -1,5 +1,5 @@
 // baseディレクトリで動作する
-const CacheView = require("./pages/cache/CacheView.js");
+const CacheView = require("./pages/cache/CacheView");
 const Sidebar = {};
 
 let CacheFileStats = {count:0,size:0};
