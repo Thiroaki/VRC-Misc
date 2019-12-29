@@ -10,7 +10,7 @@ function createWindow() {
         'icon': __dirname + '/icon_pre.png',
         webPreferences: { nodeIntegration : true}});
     mainWindow.setMinimumSize(820, 500);
-    mainWindow.loadURL("file://" + __dirname + "/index.html");
+    mainWindow.loadURL("file://" + __dirname + "/base/base.html");
 
     // 開発ツールを有効化
     mainWindow.webContents.openDevTools();
