@@ -2,7 +2,10 @@ module.exports = class YtdlModel{
     constructor(){
         this.exec = require('child_process').exec;
         this.YtdlView = require("./YtdlView");
+        this.Store = require("electron-store");
+
         this.View = new this.YtdlView(this);
+        this.store = new this.Store;
 
         this.remoteVersion = "";
         this.localVersion = "";
@@ -27,9 +30,11 @@ module.exports = class YtdlModel{
         });
 
         //TODO configに置き換える
-        let ytdl_path = "D:/Steam/steamapps/common/VRChat/VRChat_Data/StreamingAssets/youtube-dl.exe";
+        let vrcPath = this.store.get("vrcPath");
+        let ytdl_path = vrcPath + "/VRChat_Data/StreamingAssets/youtube-dl.exe";
         this.exec(ytdl_path+" --version", (err, out, stderr) => {
             this.localVersion = out;
+            if(err){this.localVersion = "error"}
         });
     }
 }

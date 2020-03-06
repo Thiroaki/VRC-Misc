@@ -39,8 +39,8 @@ span{
     align-items: center;
 }
 .side-item .icon{
-    margin-left: 4px;
-    margin-right: 8px;
+    margin-left: 0.25rem;
+    margin-right: 0.5rem;
 }
 
 #side-footer{
@@ -60,7 +60,7 @@ span{
     overflow: auto;
 }
 .main-content{
-    margin: 16px;
+    margin: 1rem;
 }
 .main-section{
     margin-bottom: 1.5rem;

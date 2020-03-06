@@ -8,9 +8,11 @@ const fs = require('fs');
 
 const CacheModel = require('./pages/cache/CacheModel');
 const YtdlModel = require('./pages/ytdl/YtdlModel');
+const SettingModel = require("./pages/setting/SettingModel");
 
 let CachePage;
 let YtdlPage;
+let SettingPage;
 
 
 // 初回実行
@@ -20,17 +22,25 @@ $(()=>{
 
     CachePage = new CacheModel();
     YtdlPage = new YtdlModel();
+    SettingPage = new SettingModel();
 });
 
 // サイドメニュークリック設定
 $("#side .clickable").on("click", (e) => {
     let id = e.currentTarget.id;
     setPage(id);
-    if(id == "cache"){
-        CachePage.onSelect();
-    }else if(id == "ytdl"){
-        YtdlPage.onSelect();
+    switch (id) {
+        case "cache":
+            CachePage.onSelect();
+            break;
+        case "ytdl":
+            YtdlPage.onSelect();
+            break;
+        case "setting":
+            SettingPage.onSelect();
+            break;
     }
+    
 });
 
 function setPage(pid) {
