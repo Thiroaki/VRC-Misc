@@ -6,30 +6,30 @@
 const path = require('path');
 const fs = require('fs');
 
-const CClass = require('./pages/cache/CClass')
-let Cache;
+const CacheModel = require('./pages/cache/CacheModel');
+const YtdlModel = require('./pages/ytdl/YtdlModel');
+
+let CachePage;
+let YtdlPage;
+
 
 // 初回実行
 $(()=>{
     // 最初に表示するページ
     setPage("info");
 
-    // var script = $('<script>').attr({
-    // 'type': 'text/javascript',
-    // 'src': 'pages/cache/CachePresenter.js'
-    // });
-    // $('body')[0].appendChild(script[0]);
-    Cache = new CClass();
+    CachePage = new CacheModel();
+    YtdlPage = new YtdlModel();
 });
 
 // サイドメニュークリック設定
 $("#side .clickable").on("click", (e) => {
     let id = e.currentTarget.id;
+    setPage(id);
     if(id == "cache"){
-        setPage(id);
-        Cache.onSelect();
-    }else{
-        setPage(id);
+        CachePage.onSelect();
+    }else if(id == "ytdl"){
+        YtdlPage.onSelect();
     }
 });
 

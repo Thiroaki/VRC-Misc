@@ -1,11 +1,11 @@
 module.exports = class CacheView{
-    constructor(presenter){
-        this.presenter = presenter;
+    constructor(model){
+        this.model = model;
 
     }
 
     onCacheDeleteButtonPress() {
-        this.presenter.onButtonPress();        
+        this.model.onButtonPress();        
     }
 
     test(txt) {

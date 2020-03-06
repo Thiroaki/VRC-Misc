@@ -1,5 +1,5 @@
-// baseディレクトリで動作する
-module.exports = class CClass{
+// base.htmlと同じディレクトリで動作する
+module.exports = class CacheModel{
     constructor(){
         this.CacheView = require("./CacheView");
         this.Sidebar = {};
@@ -32,12 +32,13 @@ module.exports = class CClass{
         setTimeout(() => {
             this.View.setView();
             this.View.setCacheInfo(count, dispSize);
-        }, 10);
+        }, 0);
         
     }
 
     onButtonPress() {
         this.View.test("キャッシュ削除ボタンが押された");
+        
     }
 
 

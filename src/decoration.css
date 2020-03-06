@@ -20,8 +20,9 @@
 .text{
     color: hsl(0, 0%, 90%);
 }
-.title{
-    font-size: 1.75rem;
+
+.h1{
+    font-size: 2rem;
 }
 
 .mb-1{
