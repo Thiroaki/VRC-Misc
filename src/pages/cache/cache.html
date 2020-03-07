@@ -14,55 +14,63 @@
             <div>
                 <input type="number" id="limit-day" min="1" value="60" style="width:45px">
                 <span>日以上使ってないキャッシュを</span>
-                <button id="clear-now" class="button">今すぐ消す</button>
-            </div>            
+                <button id="clear-now" class="btn btn-light">消す</button>
+                <button class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                  </button>
+            </div>
         </div>
     </div>
     <div class="main-section">
-            <div class="label icon">
-                <span>定期実行</span>
+        <div class="label icon">
+            <span style="float: left;">定期実行</span>
+            
+            <div class="tips">
                 <i id="cache-schedule-info" class="far fa-question-circle clickable"></i>
-            </div>
-            <div class="content-item">
-                <div>
-                    <div class="text">現在の設定</div>
-                    <div class="text"  style="padding: 0.25rem;font-size: 0.95rem;">
-                        間隔：<span>毎月1回　　</span>
-                        期間：<span>60日</span>
-                    </div>
-                </div>
-                <br>
-                <div class="text">
-                    <div class="mb-2">
-                        <select id="month">
-                            <option value="1m1">毎月1回</option>
-                            <option value="1m2">毎月2回</option>
-                            <option value="1m3">毎月3回</option>
-                            <option value="2m1">2ヶ月に1回</option>
-                            <option value="2m1">3ヶ月に1回</option>
-                        </select>
-                        <select id="hour">
-
-                        </select>
-                        <select id="minute">
-
-                        </select>
-                        に
-                        <select id="limit">
-                            <option value="20">20日</option>
-                            <option value="30">30日</option>
-                            <option value="40">40日</option>
-                            <option value="50">50日</option>
-                            <option value="60">60日</option>
-                        </select>
-                        <span>以上使っていない物を消す</span>
-                    </div>
-                    <div >
-                        <button id="regist">登録</button>
-                        <button id="unregist">登録解除</button>
-                    </div>
-                    
-                </div>            
+                <div class="tips-disc">アプリが起動している時に実行されます。</div>
             </div>
         </div>
+        <div class="content-item">
+            <div>
+                <div class="text">現在の設定</div>
+                <div class="text"  style="padding: 0.25rem;font-size: 0.95rem;">
+                    間隔：<span>毎月1回　　</span>
+                    期間：<span>60日</span>
+                </div>
+            </div>
+            <br>
+            <div class="text">
+                <div class="mb-2">
+                    <select id="month">
+                        <option value="1m1">毎月1回</option>
+                        <option value="1m2">毎月2回</option>
+                        <option value="1m3">毎月3回</option>
+                        <option value="2m1">2ヶ月に1回</option>
+                        <option value="2m1">3ヶ月に1回</option>
+                    </select>
+                    <select id="hour">
+
+                    </select>
+                    <select id="minute">
+
+                    </select>
+                    に
+                    <select id="limit">
+                        <option value="20">20日</option>
+                        <option value="30">30日</option>
+                        <option value="40">40日</option>
+                        <option value="50">50日</option>
+                        <option value="60">60日</option>
+                    </select>
+                    <span>以上使っていない物を消す</span>
+                </div>
+                <div >
+                    <button id="regist">登録</button>
+                    <button id="unregist">登録解除</button>
+                </div>
+                
+            </div>            
+        </div>
+    </div>
 </div>

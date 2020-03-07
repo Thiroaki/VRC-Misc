@@ -2,12 +2,13 @@
 module.exports = class CacheModel{
     constructor(){
         this.CacheView = require("./CacheView");
-        this.Sidebar = {};
-    
+        this.Store = require("electron-store");
+        this.View = new this.CacheView(this);
+        this.store = new this.Store();
+        
         this.CacheFileStats = {count:0,size:0};
         this.CacheFiles = [];
 
-        this.View = new this.CacheView(this);
         this.View.setUiEvents();
         this.loadCacheStatus();
     }
@@ -26,19 +27,27 @@ module.exports = class CacheModel{
             dispSize = (totalSize/1024**2).toFixed(2) + "MB";
         }
 
-        console.log(count);
-        console.log(dispSize);
-
         setTimeout(() => {
             this.View.setView();
             this.View.setCacheInfo(count, dispSize);
-        }, 0);
+        }, 10);
         
     }
 
-    onButtonPress() {
-        this.View.test("キャッシュ削除ボタンが押された");
-        
+    onLimitDayChanged(day){
+        this.store.set("cacheLimitDay", day * 1);
+    }
+
+    onClearButtonPress() {
+        let nowDate = new Date(Date.now());
+        let limitDay = this.store.get("cacheLimitDay");
+
+        this.CacheFiles.forEach((file)=>{
+            let distDays = (nowDate - file.atime) / 86400000;
+            if (distDays > limitDay) {
+                fs.unlink(file.name, (err)=>{});
+            }
+        });
     }
 
 

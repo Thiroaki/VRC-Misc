@@ -25,16 +25,49 @@
     font-size: 2rem;
 }
 
-.mb-1{
-    margin-bottom: 0.25rem;
-}
-.mb-2{
-    margin-bottom: 0.5rem;
-}
-.mb-3{
-    margin-bottom: 0.75rem;
-}
 
 select{
     height: 1.5rem;
+}
+
+.tips{
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+.tips-disc{
+    display: none;
+    position: absolute;
+    padding: 0.5rem;
+    line-height: 1.6em;
+    color: #ffffff;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    background: hsl(0, 0%, 30%);
+    width: 200px;
+}
+.tips-disc:before{
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    right: 100%;
+    border: 10px solid transparent;
+    border-right: 10px solid #ffffff;
+}
+.tips-disc::after{
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    right: 99.5%;
+    border: 10px solid transparent;
+    border-right: 10px solid hsl(0, 0%, 30%);
+}
+.tips:hover .tips-disc{
+    display: inline-block;
+    top: -0.7rem;
+    left: 2rem;
+}
+
+.border-b3{
+    border-color: hsl(0, 0%, 30%) !important;
 }

@@ -23,6 +23,7 @@ span{
 
 #side-box {
     height: 100%;
+    width: 100%;
     flex: 1;
     float: left;
     background: hsl(0, 0%, 18%);

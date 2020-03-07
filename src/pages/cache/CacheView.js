@@ -4,20 +4,14 @@ module.exports = class CacheView{
 
     }
 
-    onCacheDeleteButtonPress() {
-        this.model.onButtonPress();        
-    }
-
-    test(txt) {
-        console.log(txt);
-    }
-
     setUiEvents(){
         $(document).on("click", "#clear-now", ()=>{
-            this.onCacheDeleteButtonPress();
+            this.model.onClearButtonPress();
         });
 
-        console.log("called setUiEvents");
+        $(document).on("click", "#limit-day", ()=>{
+            this.model.onLimitDayChanged();
+        });
     }
 
     setView(){

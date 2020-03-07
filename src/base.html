@@ -2,40 +2,42 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>OK-VRC</title>
-    
+    <title>VRC-Misc</title>
+
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
     <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="decoration.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
+
 </head>
 <body>
     <div id="container">
         <div id="side">
             <div id="side-box">
-                <!-- <div class="side-item clickable" id="home">
-                    <div class="side-icon icon"><i class="fas fa-home"></i></div>
-                    <div>
-                        <span class="text sitext">Home</span>
-                    </div>
-                </div> -->
-                <div class="side-item clickable" id="cache">
-                    <div class="side-icon icon"><i class="far fa-hdd fa-2x fa-fw"></i></div>
-                    <div>
+                <div class="row clickable mx-2 py-3 align-items-center border-bottom border-b3" id="cache">
+                    <div class="col-3 pl-1 side-icon icon"><i class="far fa-hdd fa-2x fa-fw"></i></div>
+                    <div class="col-8 ml-2 px-0">
                         <span class="text sitext">キャッシュ削除</span>
                     </div>
                 </div>
-                <div class="side-item clickable" id="ytdl">
-                    <div class="side-icon icon"><i class="fab fa-youtube fa-2x fa-fw"></i></div>
-                    <div><span class="text sitext">Youtube-dl更新</span></div>
+                <div class="row clickable mx-2 py-3 align-items-center border-bottom border-b3" id="ytdl">
+                    <div class="col-3 pl-1 side-icon icon"><i class="fab fa-youtube fa-2x fa-fw"></i></div>
+                    <div class="col-8 ml-2 px-0">
+                        <span class="text sitext">Youtube-dl更新</span>
+                    </div>
                 </div>
-                <div class="side-item clickable" id="pic">
-                    <div class="side-icon icon"><i class="far fa-images fa-2x fa-fw"></i></div>
-                    <div><span class="text sitext">スクショ管理</span></div>
+                <div class="row clickable mx-2 py-3 align-items-center border-bottom border-b3" id="pic">
+                    <div class="col-3 pl-1 side-icon icon"><i class="far fa-images fa-2x fa-fw"></i></div>
+                    <div class="col-8 ml-2 px-0">
+                        <span class="text sitext">写真</span>
+                    </div>
                 </div>
-                <div class="side-item clickable" id="friends">
-                    <div class="side-icon icon"><i class="fas fa-user-friends fa-2x fa-fw"></i></div>
-                    <div><span class="text sitext">フレンド</span></div>
-                </div>
+                <!-- <div class="row clickable mx-2 py-3 align-items-center border-bottom border-b3" id="friend">
+                    <div class="col-3 pl-1 side-icon icon"><i class="fas fa-user-friends fa-2x fa-fw"></i></div>
+                    <div class="col-8 ml-2 px-0">
+                        <span class="text sitext">フレンド</span>
+                    </div>
+                </div> -->
             </div>
             <div id="side-footer">
                 <div id="info" class="footer-item clickable">
@@ -51,8 +53,9 @@
                 
         </div>
     </div>
-    
-    <script>window.jQuery = window.$ = require("..\\node_modules\\jquery\\dist\\jquery.js");</script>
+
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="./jquery_after.js"></script>
     <script src="base.js"></script>
 </body>
 </html>
