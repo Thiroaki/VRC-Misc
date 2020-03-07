@@ -12,7 +12,7 @@ function createWindow() {
         app.quit();
     }
 
-    mainWindow = new BrowserWindow({ width: 820, height: 500,
+    mainWindow = new BrowserWindow({ width: 820, height: 620,
         'icon': __dirname + '/icon_pre.png',
         webPreferences: { nodeIntegration : true}});
     mainWindow.setMinimumSize(820, 500);

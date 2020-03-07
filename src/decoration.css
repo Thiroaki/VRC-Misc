@@ -5,20 +5,39 @@
 .bg-w{
     background: white;
 }
+.bg-b{
+    background-color: hsl(0, 0%, 5%);
+}
+.bg-b1{
+    background-color: hsl(0, 0%, 15%);
+}
+.bg-b2{
+    background-color: hsl(0, 0%, 20%);
+}
+.bg-b3{
+    background-color: hsl(0, 0%, 25%);
+}
+.bg-b4{
+    background-color: hsl(0, 0%, 35%);
+}
+.bg-b5{
+    background-color: hsl(0, 0%, 65%);
+}
 
-.label{
+.section-label{
     font-size: 0.8rem;
+    color: hsl(0, 0%, 98%);
 }
 
 .icon{
     color: hsl(0, 0%, 50%);
 }
-.selected{
+.side-selected{
     color: hsl(0, 0%, 98%);
 }
 
 .text{
-    color: hsl(0, 0%, 90%);
+    color: hsl(0, 0%, 98%);
 }
 
 .h1{

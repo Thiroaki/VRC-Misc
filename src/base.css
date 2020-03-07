@@ -5,8 +5,8 @@ body{
     margin:0;
     height: 100%;
 }
-span{
-    color: hsl(0, 0%, 90%);
+html > span{
+    color: hsl(0, 0%, 95%);
 }
 
 #container{

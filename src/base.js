@@ -17,19 +17,28 @@ let SettingPage;
 
 // 初回実行
 $(()=>{
-    // 最初に表示するページ
-    setPage("info");
-
     CachePage = new CacheModel();
     YtdlPage = new YtdlModel();
     SettingPage = new SettingModel();
+    // 最初に表示するページ
+    setPage("cache");
+
 });
 
 // サイドメニュークリック設定
 $("#side .clickable").on("click", (e) => {
     let id = e.currentTarget.id;
     setPage(id);
-    switch (id) {
+    
+    
+});
+
+function setPage(pid) {
+    $("#main").load("pages\\"+pid+"\\"+pid+".html");
+    $(".side-selected").removeClass("side-selected");
+    $("#"+pid+" .icon").addClass("side-selected");
+
+    switch (pid) {
         case "cache":
             CachePage.onSelect();
             break;
@@ -40,11 +49,4 @@ $("#side .clickable").on("click", (e) => {
             SettingPage.onSelect();
             break;
     }
-    
-});
-
-function setPage(pid) {
-    $("#main").load("pages\\"+pid+"\\"+pid+".html");
-    $(".selected").removeClass("selected");
-    $("#"+pid+" .icon").addClass("selected");
 }

@@ -3,6 +3,7 @@ module.exports = class CacheModel{
     constructor(){
         this.CacheView = require("./CacheView");
         this.Store = require("electron-store");
+        this.cron = require("node-cron");
         this.View = new this.CacheView(this);
         this.store = new this.Store();
         
@@ -12,10 +13,59 @@ module.exports = class CacheModel{
         this.View.setUiEvents();
         this.loadCacheStatus();
     }
-    
+
 
 
     onSelect() {
+        setTimeout(() => {
+            this.View.setView();
+            this.View.setUiEvents();
+            this.View.setLimitDay(this.store.get("cacheLimitDay"));
+            this.updateCacheInfo();
+        }, 10);
+        
+    }
+
+    onLimitDayChanged(day){
+        this.store.set("cacheLimitDay", day);
+    }
+
+    onClearButtonPress(limit) {
+        setTimeout(()=>{
+            this.View.setClearButtonDisable();
+            this.clearCache(limit);
+            this.updateCacheInfo();
+            this.View.setClearButtonEnable();
+        }, 0);
+        
+    }
+
+    onRegistButton(cronText, limit){
+        
+    }
+
+    onUnRegistButton(){
+
+    }
+
+
+
+    clearCache(limit){
+        let nowDate = new Date(Date.now());
+        let cnt = 0;
+
+        for(let i=0; i < this.CacheFiles.length; i++){
+            let file = this.CacheFiles[i];
+            let distDays = (nowDate - file.atime) / 86400000;
+            if (distDays > limit) {
+                fs.unlink(file.name, (err)=>{});
+                cnt++;
+            }
+        }
+        console.log(cnt);
+    }
+
+    updateCacheInfo(){
         let count = this.CacheFileStats.count;
         let totalSize = this.CacheFileStats.size;
         let dispSize;
@@ -27,29 +77,8 @@ module.exports = class CacheModel{
             dispSize = (totalSize/1024**2).toFixed(2) + "MB";
         }
 
-        setTimeout(() => {
-            this.View.setView();
-            this.View.setCacheInfo(count, dispSize);
-        }, 10);
-        
+        this.View.setCacheInfo(count, dispSize);
     }
-
-    onLimitDayChanged(day){
-        this.store.set("cacheLimitDay", day * 1);
-    }
-
-    onClearButtonPress() {
-        let nowDate = new Date(Date.now());
-        let limitDay = this.store.get("cacheLimitDay");
-
-        this.CacheFiles.forEach((file)=>{
-            let distDays = (nowDate - file.atime) / 86400000;
-            if (distDays > limitDay) {
-                fs.unlink(file.name, (err)=>{});
-            }
-        });
-    }
-
 
     loadCacheStatus(){
         // ファイル配列とトータルサイズ取得
@@ -85,6 +114,7 @@ module.exports = class CacheModel{
 
             this.CacheFileStats.count = totalCount;
             this.CacheFileStats.size = totalSize;
+            this.updateCacheInfo();
         }, 0);
         
     }
