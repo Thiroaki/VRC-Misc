@@ -6,7 +6,7 @@ module.exports = class CacheView{
 
     setUiEvents(){
         //キャッシュ情報
-        $("#clear-now").on("click", ()=>{
+        $("#cache-clear").on("click", ()=>{
             this.model.onClearButtonPress($("#limit-day").val());
         });
         $("#limit-day").on("change", ()=>{
@@ -14,7 +14,7 @@ module.exports = class CacheView{
         });
 
         //定期実行
-        $("#regist").on("click", ()=>{
+        $("#cache-regist").on("click", ()=>{
             let limit = $('input[name="limit"').val();
             let month = $('input[name="month"]').val();
             let week = $('input[name="week"]').val();
@@ -35,14 +35,13 @@ module.exports = class CacheView{
             }
         });
 
-        $("#unregist").on("click", ()=>{
+        $("#cache-unregist").on("click", ()=>{
             this.model.onUnRegistButton();
         });
     }
 
     setView(){
-        // $("#clear-now > .btn-disable").hide();
-        // $("#input-error").hide();
+        
     }
 
     setLimitDay(limit){
@@ -55,13 +54,13 @@ module.exports = class CacheView{
     }
 
     setClearButtonEnable(){
-        $("#clear-now").prop("disabled", false);
-        $("#clear-now > .btn-disable").hide();
-        $("#clear-now > .btn-enable").fadeIn(200);
+        $("#cache-clear").prop("disabled", false);
+        $("#cache-clear > .btn-disable").hide();
+        $("#cache-clear > .btn-enable").fadeIn(200);
     }
     setClearButtonDisable(){
-        $("#clear-now").prop("disabled", true);
-        $("#clear-now > .btn-enable").hide();
-        $("#clear-now > .btn-disable").fadeIn(200);
+        $("#cache-clear").prop("disabled", true);
+        $("#cache-clear > .btn-enable").hide();
+        $("#cache-clear > .btn-disable").fadeIn(200);
     }
 }
