@@ -10,14 +10,10 @@ module.exports = class SettingModel{
 
 
     onSelect(){
-        setTimeout(()=>{
             this.View.setUiEvents();
 
             let vrcPath = this.store.get("vrcPath");
             this.View.setVRCPath(vrcPath);
-
-
-        }, 0);
     }
 
     onClickChangeVRCPath(){

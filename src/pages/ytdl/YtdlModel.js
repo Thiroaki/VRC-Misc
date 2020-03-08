@@ -23,16 +23,13 @@ module.exports = class YtdlModel{
 
 
     onSelect(){
-        setTimeout(()=>{
-            this.remoteVersion = this.store.get("remoteVer");
-            this.localVersion = this.store.get("localVer");
-            this.RemoteDownloadUrl = this.store.get("remoteDlUrl");
-            this.ChecksumDownloadUrl = this.store.get("chsumDlUrl");
+        this.remoteVersion = this.store.get("remoteVer");
+        this.localVersion = this.store.get("localVer");
+        this.RemoteDownloadUrl = this.store.get("remoteDlUrl");
+        this.ChecksumDownloadUrl = this.store.get("chsumDlUrl");
 
-
-            this.View.setView();
-            this.updateVersionInfo()
-        }, 0);
+        this.View.setView();
+        this.updateVersionInfo()
     }
 
 

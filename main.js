@@ -3,7 +3,7 @@ const path = require('path');
 
 let mainWindow;
 
-require("electron-reload")(__dirname);
+//require("electron-reload")(__dirname);
 
 function createWindow() {
     //二重起動の防止
@@ -42,7 +42,7 @@ app.on('ready', ()=>{
     ]);
 
     //ツールチップの設定
-    tray.setToolTip("OK-VRC");
+    tray.setToolTip("VRC-Misc");
  
     //右クリック時にコンテキストメニュー表示をセットする
     tray.on('right-click',() =>{

@@ -21,7 +21,7 @@ $(()=>{
     YtdlPage = new YtdlModel();
     SettingPage = new SettingModel();
     // 最初に表示するページ
-    setPage("ytdl");
+    setPage("info");
 
 });
 
@@ -38,15 +38,17 @@ function setPage(pid) {
     $(".side-selected").removeClass("side-selected");
     $("#"+pid+" .icon").addClass("side-selected");
 
-    switch (pid) {
-        case "cache":
-            CachePage.onSelect();
-            break;
-        case "ytdl":
-            YtdlPage.onSelect();
-            break;
-        case "setting":
-            SettingPage.onSelect();
-            break;
-    }
+    setTimeout(() => {
+        switch (pid) {
+            case "cache":
+                CachePage.onSelect();
+                break;
+            case "ytdl":
+                YtdlPage.onSelect();
+                break;
+            case "setting":
+                SettingPage.onSelect();
+                break;
+        }
+    }, 10);
 }

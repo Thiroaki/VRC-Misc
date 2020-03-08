@@ -11,21 +11,16 @@ module.exports = class CacheModel{
         this.CacheFiles = [];
         this.ClearJobLocked = false;
 
-        setTimeout(()=>{
-            this.loadCacheStatus();
-        }, 0);        
+        this.loadCacheStatus();
     }
 
 
 
     onSelect() {
-        setTimeout(() => {
-            this.View.setView();
-            this.View.setUiEvents();
-            this.View.setLimitDay(this.store.get("cacheLimitDay"));
-            this.updateCacheInfo();
-        }, 10);
-        
+        this.View.setView();
+        this.View.setUiEvents();
+        this.View.setLimitDay(this.store.get("cacheLimitDay"));
+        this.updateCacheInfo();
     }
 
     onLimitDayChanged(day){
