@@ -15,10 +15,20 @@ module.exports = class YtdlModel{
         this.localVersion = "";
         this.RemoteDownloadUrl = "";
         this.ChecksumDownloadUrl = "";
-        this.UpdateJobLocked = false;
+        this.UpdateLocked = false;
+
+        this.updateJob;
 
         // 起動時処理
         //this.checkYtdlVersion();
+
+        if(this.store.get("ytdlJobStatus") != undefined && this.store.get("ytdlJobStatus")){
+            if(this.store.get("ytdlJobText") && this.store.get("ytdlJobLimit")){
+                this.createJob(this.store.get("ytdlJobText"), this.store.get("ytdlJobLimit"));
+            }
+        }else{
+            this.store.set("ytdlJobStatus", false);
+        }
     }
 
 
@@ -30,29 +40,70 @@ module.exports = class YtdlModel{
 
         this.View.setView();
         this.updateVersionInfo()
+        this.setJobInfo();
     }
 
 
     async onClickUpdateButton(){
-        if(!this.UpdateJobLocked){
-            this.UpdateJobLocked = true;
+        if(!this.UpdateLocked){
+            this.UpdateLocked = true;
             this.View.setUpdateButtonDisable();
 
             await this.checkYtdlVersion();
             await this.updateYtdl();
-            await this.checkYtdlVersion();
 
             setTimeout(() => {
                 this.updateVersionInfo();
                 this.View.setUpdateButtonEnable();
-                this.UpdateJobLocked = false;
+                this.UpdateLocked = false;
             }, 200);
         }
     }
 
     onRegistButton(cronText){
-
+        if (this.cron.validate(cronText)){
+            this.createJob(cronText);
+        }
+        this.setJobInfo();
     }
+    onUnRegistButton(){
+        this.destroyJob();
+        this.setJobInfo();
+    }
+
+
+
+    createJob(cronText){
+        this.store.set("ytdlJobText", cronText);
+        this.store.set("ytdlJobStatus", true);
+
+        if(this.updateJob != undefined){
+            this.updateJob.destroy();
+        }
+        this.updateJob = this.cron.schedule(cronText, async ()=>{
+            await this.checkYtdlVersion();
+            await this.updateYtdl();
+        }, {
+            scheduled: true
+        });
+        this.updateJob.start();
+        console.log("Job started");
+    }
+    destroyJob(){
+        this.store.set("ytdlJobStatus", false);
+        if(this.updateJob != undefined){
+            this.updateJob.destroy();
+        }
+        console.log("Job deleted");
+    }
+
+    setJobInfo(){
+        let jobStatus = this.store.get("ytdlJobStatus");
+        let span = this.store.get("ytdlJobText");
+
+        this.View.setJobInfo(jobStatus, span);
+    }
+
 
     updateVersionInfo(){
         this.View.setVersion(this.remoteVersion, this.localVersion);
@@ -75,6 +126,7 @@ module.exports = class YtdlModel{
                     if(checksum == this.md5hex(body)){
                         this.fs.renameSync(ytdl_path, bkup_path);
                         this.fs.writeFileSync(ytdl_path, body, "binary");
+                        this.localVersion = this.remoteVersion;
                     }
                     resolve("update done");
                 });

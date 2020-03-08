@@ -9,9 +9,19 @@ module.exports = class CacheModel{
         
         this.CacheFileStats = {count:0,size:0};
         this.CacheFiles = [];
-        this.ClearJobLocked = false;
+        this.ClearLocked = false;
+
+        this.clearJob;
 
         this.loadCacheStatus();
+
+        if(this.store.get("clearJobStatus") != undefined && this.store.get("clearJobStatus")){
+            if(this.store.get("clearJobText") && this.store.get("clearJobLimit")){
+                this.createJob(this.store.get("clearJobText"), this.store.get("clearJobLimit"));
+            }
+        }else{
+            this.store.set("clearJobStatus", false);
+        }
     }
 
 
@@ -21,6 +31,7 @@ module.exports = class CacheModel{
         this.View.setUiEvents();
         this.View.setLimitDay(this.store.get("cacheLimitDay"));
         this.updateCacheInfo();
+        this.setJobInfo()
     }
 
     onLimitDayChanged(day){
@@ -28,27 +39,64 @@ module.exports = class CacheModel{
     }
 
     onClearButtonPress(limit) {
-        if(!this.ClearJobLocked){
-            this.ClearJobLocked = true;
+        if(!this.ClearLocked){
+            this.ClearLocked = true;
             this.View.setClearButtonDisable();
             setTimeout(()=>{
                 this.clearCache(limit);
                 this.loadCacheStatus();
                 this.updateCacheInfo();
                 this.View.setClearButtonEnable();
-                this.ClearJobLocked = false;
+                this.ClearLocked = false;
             }, 200);
         }
-}
+    }
 
     onRegistButton(cronText, limit){
-        
+        if (this.cron.validate(cronText)){
+            this.createJob(cronText, limit);
+        }
+        this.setJobInfo();
     }
-
     onUnRegistButton(){
-
+        this.destroyJob();
+        this.setJobInfo();
     }
 
+
+
+    createJob(cronText, limit){
+        this.store.set("clearJobText", cronText);
+        this.store.set("clearJobLimit", limit);
+        this.store.set("clearJobStatus", true);
+
+        if(this.clearJob != undefined){
+            this.clearJob.destroy();
+        }
+        this.clearJob = this.cron.schedule(cronText, ()=>{
+            this.loadCacheStatus();
+            this.clearCache(limit);
+        }, {
+            scheduled: true
+        });
+        this.clearJob.start();
+        console.log("Job started");
+    }
+    destroyJob(){
+        this.store.set("clearJobStatus", false);
+        if(this.clearJob != undefined){
+            this.clearJob.destroy();
+        }
+        console.log("Job deleted");
+    }
+
+    setJobInfo(){
+        let jobStatus = this.store.get("clearJobStatus");
+        let span = this.store.get("clearJobText");
+        let limit = this.store.get("clearJobLimit");
+        
+        this.View.setJobInfo(jobStatus, span, limit);
+    }
 
 
     clearCache(limit){
@@ -63,9 +111,7 @@ module.exports = class CacheModel{
                 cnt++;
             }
         }
-        console.log(limit);
-        console.log(cnt);
-        console.log("Clear!");
+        console.log(cnt + " files cleared!");
         
     }
 

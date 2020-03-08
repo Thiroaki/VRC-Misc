@@ -21,7 +21,7 @@ module.exports = class CacheView{
             let day = $('input[name="day"]').val();
             let hour = $('input[name="hour"]').val();
             let minute = $('input[name="minute"]').val();
-            let regex = /^(\d|,|\*)*$/;
+            let regex = /^(\d|,|-|\*)*$/;
 
             if(regex.test(month)&&regex.test(week)&&regex.test(day)&&regex.test(hour)&&regex.test(minute)){
                 let cronText = minute +" "+ hour +" "+ day +" "+ month +" "+ week;
@@ -51,6 +51,26 @@ module.exports = class CacheView{
     setCacheInfo(count, size){
         $("#total-count").text(count);
         $("#total-size").text(size);
+    }
+
+    setJobInfo(jobStatus, span, limit){
+        let d = span.split(" ");
+        $('input[name="limit"]').val(limit);
+        $('input[name="month"]').val(d[4]);
+        $('input[name="week"]').val(d[3]);
+        $('input[name="day"]').val(d[2]);
+        $('input[name="hour"]').val(d[1]);
+        $('input[name="minute"]').val(d[0]);
+
+        if(jobStatus){
+            $("#cache-span").text(span);
+            $("#cache-limit").text(limit+"日");
+        }else{
+            $("#cache-span").text("");
+            $("#cache-limit").text("");
+        }
+        console.log(jobStatus);
+        
     }
 
     setClearButtonEnable(){

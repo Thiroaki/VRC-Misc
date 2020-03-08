@@ -21,7 +21,7 @@ module.exports = class YtdlView{
             let day = $('input[name="day"]').val();
             let hour = $('input[name="hour"]').val();
             let minute = $('input[name="minute"]').val();
-            let regex = /^(\d|,|\*)*$/;
+            let regex = /^(\d|,|-|\*)*$/;
 
             if(regex.test(month)&&regex.test(week)&&regex.test(day)&&regex.test(hour)&&regex.test(minute)){
                 let cronText = minute +" "+ hour +" "+ day +" "+ month +" "+ week;
@@ -34,6 +34,28 @@ module.exports = class YtdlView{
                 });
             }
         });
+
+        $("#ytdl-unregist").on("click", ()=>{
+            this.Model.onUnRegistButton();
+        });
+    }
+
+
+    setJobInfo(jobStatus, span){
+        let d = span.split(" ");
+        $('input[name="month"]').val(d[4]);
+        $('input[name="week"]').val(d[3]);
+        $('input[name="day"]').val(d[2]);
+        $('input[name="hour"]').val(d[1]);
+        $('input[name="minute"]').val(d[0]);
+
+        if(jobStatus){
+            $("#ytdl-span").text(span);
+        }else{
+            $("#ytdl-span").text("");
+        }
+        console.log(jobStatus);
+        
     }
 
     setUpdateButtonEnable(){
