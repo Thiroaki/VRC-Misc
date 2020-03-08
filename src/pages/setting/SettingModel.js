@@ -2,8 +2,7 @@ module.exports = class SettingModel{
     constructor(){
         this.Store = require("electron-store");
         this.SettingView = require("./SettingView");
-        this.remote = require('electron').remote;
-        this.dialog = this.remote.dialog;
+        this.dialog = require('electron').remote.dialog;
         this.View = new this.SettingView(this);
         this.store = new this.Store;
 

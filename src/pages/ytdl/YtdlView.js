@@ -1,6 +1,6 @@
 module.exports = class YtdlView{
     constructor(model){
-        this.model = model;
+        this.Model = model;
     }
 
     setVersion(remote, local){
@@ -9,21 +9,42 @@ module.exports = class YtdlView{
     }
 
     setView(){
-        if($("#month").val() == "m"){
-            $("#month").after('<select id="times"></select>');
-            for(let i=1; i<31; i++){
-                $("#times").append("<option value="+i+">"+i+"日</option>");
+        //情報
+        $("#ytdl-update").on("click", ()=>{
+            this.Model.onClickUpdateButton();
+        });
+
+        //定期実行
+        $("#ytdl-regist").on("click", ()=>{
+            let month = $('input[name="month"]').val();
+            let week = $('input[name="week"]').val();
+            let day = $('input[name="day"]').val();
+            let hour = $('input[name="hour"]').val();
+            let minute = $('input[name="minute"]').val();
+            let regex = /^(\d|,|\*)*$/;
+
+            if(regex.test(month)&&regex.test(week)&&regex.test(day)&&regex.test(hour)&&regex.test(minute)){
+                let cronText = minute +" "+ hour +" "+ day +" "+ month +" "+ week;
+                this.Model.onRegistButton(cronText);
+            }else{
+                $("#input-error").fadeIn(200, ()=>{
+                    setTimeout(()=>{
+                        $("#input-error").fadeOut(200);
+                    }, 4000);
+                });
             }
-        }
-        
-    
-        for(let i=0; i<24; i++){
-            $("#hour").append("<option value="+i+">"+i+"時</option>");
-        }
-        for(let i=0; i<60; i+=10){
-            $("#minute").append("<option value="+i+">"+i+"分</option>");
-        }
-    
+        });
+    }
+
+    setUpdateButtonEnable(){
+        $("#ytdl-update").prop("disabled", false);
+        $("#ytdl-update > #ytdl-disable").hide();
+        $("#ytdl-update > #ytdl-enable").fadeIn(200);
+    }
+    setUpdateButtonDisable(){
+        $("#ytdl-update").prop("disabled", true);
+        $("#ytdl-update > #ytdl-enable").hide();
+        $("#ytdl-update > #ytdl-disable").fadeIn(200);
     }
 
 }

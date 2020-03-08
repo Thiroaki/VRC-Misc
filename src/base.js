@@ -21,7 +21,7 @@ $(()=>{
     YtdlPage = new YtdlModel();
     SettingPage = new SettingModel();
     // 最初に表示するページ
-    setPage("cache");
+    setPage("ytdl");
 
 });
 

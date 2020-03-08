@@ -1,53 +1,79 @@
 <div class="main-content">
-    <div class="main-section">
+    <div class="container mb-4 p-0">
         <div class="section-label">
             <span>バージョン情報</span>
-        </div>
-        <div class="content-item">
-            <div class="text">
-                リモート : <span id="remotever"></span><br>
-                ローカル : <span id="localver"></span>
+            <div class="tips">
+                <i id="ytdl-info" class="far fa-question-circle clickable icon"></i>
+                <div class="tips-disc" style="width: 10rem;">特別な理由が無い限り<br>更新しないこと。</div>
             </div>
-            <div style="text-align: right;">
-                <button class="button is-light">youtube-dl更新</button>
-            </div>            
         </div>
-    </div>
-    <div class="main-section">
-            <div class="section-label">
-                <span>定期実行</span>
-            </div>
-            <div class="content-item">
-                <div>
-                    <div class="text">現在の設定</div>
-                    <div class="text"  style="padding: 0.25rem;font-size: 0.95rem;">
-                        間隔：<span>毎月1回　　</span>
+        <div class="p-3 bg-b2 text">
+            <div class="row">
+                <div class="col">
+                    <div>
+                        リモート : <span id="remotever"></span>
+                    </div>
+                    <div>
+                        ローカル : <span id="localver"></span>
                     </div>
                 </div>
-                <br>
-                <div class="text">
-                    <div class="mb-2">
-                        <select class="asd" id="month">
-                            <option value="m">毎月</option>
-                            <option value="w">毎週</option>
-                            <option value="d">毎日</option>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <select id="hour">
-
-                        </select>
-                        <select id="minute">
-
-                        </select>
-                        <span>に更新</span>
-                    </div>
-                    <div >
-                        <button id="regist">登録</button>
-                        <button id="unregist">登録解除</button>
-                    </div>
-                    
-                </div>            
+                <div class="col-4 d-flex justify-content-end align-items-center">
+                    <button id="ytdl-update" class="btn btn-light">
+                        <group id="ytdl-enable">アップデート</group>
+                        <group id="ytdl-disable" style="display: none;">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            更新中...
+                        </group>
+                    </button>
+                </div> 
             </div>
         </div>
+    </div>
+    <div class="container mb-4 p-0">
+        <div class="section-label">
+            <span>定期実行</span>
+            
+            <div class="tips">
+                <i id="schedule-info" class="far fa-question-circle clickable icon"></i>
+                <div class="tips-disc">アプリが起動している時に実行されます。</div>
+            </div>
+        </div>
+        <div class="p-3 bg-b2">
+            <div class="bg-b4 m-0 p-2 row">
+                <div class="text col-2 pr-0"><small>現在の設定</small></div>
+                <div class="text col">
+                    間隔：<span id="ytdl-span">毎月</span>
+                </div>
+            </div>
+            <br>
+            <div>
+                <div class="row mb-2">
+                    <div class="col text">
+                        <span>実行する月や時間を、半角、カンマ区切りで入力してください。<br>
+                            曜日は、0(日曜) ～ 6(土曜)<br>
+                            毎月や毎時はアスタリスクで入力出来ます。
+                        </span>
+                    </div>
+                </div>
+                <div class="text row mb-2">
+                    <div class="col">
+                        <div><span class="mx-2">月</span><input type="text" name="month" value="*"></div>
+                        <div><span class="mx-2">週</span><input type="text" name="week" value="*"></div>
+                        <div><span class="mx-2">日</span><input type="text" name="day" value="1"></div>
+                        <div><span class="mx-2">時</span><input type="text" name="hour" value="23"></div>
+                        <div><span class="mx-2">分</span><input type="text" name="minute" value="59"></div>
+                    </div>
+                </div>
+                <div class="row text justify-content-end">
+                    <div class="col text-right d-flex align-items-center justify-content-end">
+                        <span id="input-error" style="display: none; color:#ff6e6e">半角数字で入力してください</span>
+                    </div>
+                    <div class="col-4 float-left">    
+                        <button id="ytdl-regist" class="btn btn-light">登録</button>
+                        <button id="ytdl-unregist" class="btn btn-light">登録解除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
