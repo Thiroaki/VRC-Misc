@@ -9,9 +9,11 @@ module.exports = class CacheModel{
         
         this.CacheFileStats = {count:0,size:0};
         this.CacheFiles = [];
+        this.ClearJobLocked = false;
 
-        this.View.setUiEvents();
-        this.loadCacheStatus();
+        setTimeout(()=>{
+            this.loadCacheStatus();
+        }, 0);        
     }
 
 
@@ -31,14 +33,18 @@ module.exports = class CacheModel{
     }
 
     onClearButtonPress(limit) {
-        setTimeout(()=>{
+        if(!this.ClearJobLocked){
+            this.ClearJobLocked = true;
             this.View.setClearButtonDisable();
-            this.clearCache(limit);
-            this.updateCacheInfo();
-            this.View.setClearButtonEnable();
-        }, 0);
-        
-    }
+            setTimeout(()=>{
+                this.clearCache(limit);
+                this.loadCacheStatus();
+                this.updateCacheInfo();
+                this.View.setClearButtonEnable();
+                this.ClearJobLocked = false;
+            }, 200);
+        }
+}
 
     onRegistButton(cronText, limit){
         
@@ -62,7 +68,10 @@ module.exports = class CacheModel{
                 cnt++;
             }
         }
+        console.log(limit);
         console.log(cnt);
+        console.log("Clear!");
+        
     }
 
     updateCacheInfo(){
@@ -78,44 +87,45 @@ module.exports = class CacheModel{
         }
 
         this.View.setCacheInfo(count, dispSize);
+        console.log("Update!");
+        
     }
 
     loadCacheStatus(){
         // ファイル配列とトータルサイズ取得
-        setTimeout(() => {
-            const userName = process.env['USERPROFILE'].split(path.sep)[2];
-            const cachepath = ["C:/Users/"+userName+"/AppData/LocalLow/VRChat/VRChat/VRCHTTPCache",
-                        "C:/Users/"+userName+"/AppData/LocalLow/VRChat/VRChat/HTTPCache-WindowsPlayer"];
+        const userName = process.env['USERPROFILE'].split(path.sep)[2];
+        const cachepath = ["C:/Users/"+userName+"/AppData/LocalLow/VRChat/VRChat/VRCHTTPCache",
+                    "C:/Users/"+userName+"/AppData/LocalLow/VRChat/VRChat/HTTPCache-WindowsPlayer"];
 
-            let totalSize=0;
-            let totalCount=0;
+        this.CacheFiles.length = 0;
+        let totalSize=0;
+        let totalCount=0;
 
-            for(let i=0; i<cachepath.length; i++){
-                if(path.isAbsolute(cachepath[i])){
-                    try{
-                        let files = fs.readdirSync(cachepath[i]);
-                        totalCount += files.length;
-                        
-                        for (let file of files) {
-                            let fp = path.join(cachepath[i], file);
-                            let stat = fs.statSync(fp);
-                            if (!stat.isDirectory()) {
-                                // キャッシュファイル1個に対しての処理
-                                totalSize += stat.size;
-                                stat.name = fp;
-                                this.CacheFiles.push(stat);
-                            }
+        for(let i=0; i<cachepath.length; i++){
+            if(path.isAbsolute(cachepath[i])){
+                try{
+                    let files = fs.readdirSync(cachepath[i]);
+                    for (let j=0; j < files.length; j++) {
+                        let file = files[j];
+                        let fp = path.join(cachepath[i], file);
+                        let stat = fs.statSync(fp);
+                        if (!stat.isDirectory()) {
+                            // キャッシュファイル1個に対しての処理
+                            totalCount++;
+                            totalSize += stat.size;
+                            stat.name = fp;
+                            this.CacheFiles.push(stat);
                         }
-                    }catch (e){
-                        console.log(e);
                     }
+                }catch (e){
+                    console.log(e);
                 }
             }
+        }
 
-            this.CacheFileStats.count = totalCount;
-            this.CacheFileStats.size = totalSize;
-            this.updateCacheInfo();
-        }, 0);
+        this.CacheFileStats.count = totalCount;
+        this.CacheFileStats.size = totalSize;
+        console.log("Load Finish");
         
     }
 }

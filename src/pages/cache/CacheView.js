@@ -30,7 +30,7 @@ module.exports = class CacheView{
                 $("#input-error").fadeIn(200, ()=>{
                     setTimeout(()=>{
                         $("#input-error").fadeOut(200);
-                    }, 5000);
+                    }, 4000);
                 });
             }
         });
@@ -41,8 +41,8 @@ module.exports = class CacheView{
     }
 
     setView(){
-        $("#clear-now > .btn-disable").hide();
-        $("#input-error").hide();
+        // $("#clear-now > .btn-disable").hide();
+        // $("#input-error").hide();
     }
 
     setLimitDay(limit){
@@ -57,11 +57,11 @@ module.exports = class CacheView{
     setClearButtonEnable(){
         $("#clear-now").prop("disabled", false);
         $("#clear-now > .btn-disable").hide();
-        $("#clear-now > .btn-enable").fadeIn(500);
+        $("#clear-now > .btn-enable").fadeIn(200);
     }
     setClearButtonDisable(){
         $("#clear-now").prop("disabled", true);
         $("#clear-now > .btn-enable").hide();
-        $("#clear-now > .btn-disable").fadeIn(500);
+        $("#clear-now > .btn-disable").fadeIn(200);
     }
 }
