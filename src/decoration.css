@@ -2,6 +2,20 @@
     cursor: pointer;
 }
 
+.btn{
+    border-radius: 2px;
+    padding: 0.25rem 0.5rem;
+}
+
+.form-control{
+    border-radius: 2px;
+    padding: 0.25rem 0.5rem;
+}
+
+#bkup-folder > div{
+    border-bottom: 1px solid hsl(0, 0%, 98%);
+}
+
 .bg-w{
     background: white;
 }
@@ -24,10 +38,6 @@
     background-color: hsl(0, 0%, 65%);
 }
 
-.section-label{
-    font-size: 0.8rem;
-    color: hsl(0, 0%, 98%);
-}
 
 .icon{
     color: hsl(0, 0%, 50%);
@@ -40,14 +50,6 @@
     color: hsl(0, 0%, 98%);
 }
 
-.h1{
-    font-size: 2rem;
-}
-
-
-select{
-    height: 1.5rem;
-}
 
 .tips{
     position: relative;

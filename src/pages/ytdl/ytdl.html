@@ -4,7 +4,7 @@
             <span>バージョン情報</span>
             <div class="tips">
                 <i id="ytdl-info" class="far fa-question-circle clickable icon"></i>
-                <div class="tips-disc" style="width: 10rem;">特別な理由が無い限り<br>更新しないこと。</div>
+                <div class="tips-disc" style="width: 10rem;">特別な理由が無い限り<br>更新しない方が良いです。</div>
             </div>
         </div>
         <div class="p-3 bg-b2 text">
@@ -64,14 +64,15 @@
                         <div><span class="mx-2">分</span><input type="text" name="minute" value=""></div>
                     </div>
                 </div>
-                <div class="row text justify-content-end">
+                <div class="row text">
                     <div class="col text-right d-flex align-items-center justify-content-end">
                         <span id="input-error" style="display: none; color:#ff6e6e">半角数字で入力してください</span>
+                        <div class="ml-2">
+                            <button id="ytdl-regist" class="btn btn-light mr-1">登録</button>
+                            <button id="ytdl-unregist" class="btn btn-light">登録解除</button>
+                        </div>
                     </div>
-                    <div class="col-4 float-left">    
-                        <button id="ytdl-regist" class="btn btn-light">登録</button>
-                        <button id="ytdl-unregist" class="btn btn-light">登録解除</button>
-                    </div>
+                    
                 </div>
             </div>
         </div>

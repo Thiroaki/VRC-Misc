@@ -97,7 +97,9 @@ module.exports = class YtdlModel{
         let jobStatus = this.store.get("ytdlJobStatus");
         let span = this.store.get("ytdlJobText");
 
-        this.View.setJobInfo(jobStatus, span);
+        if(jobStatus && span){
+            this.View.setJobInfo(jobStatus, span);
+        }
     }
 
 

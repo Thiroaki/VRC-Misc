@@ -90,8 +90,9 @@ module.exports = class CacheModel{
         let jobStatus = this.store.get("clearJobStatus");
         let span = this.store.get("clearJobText");
         let limit = this.store.get("clearJobLimit");
-        
-        this.View.setJobInfo(jobStatus, span, limit);
+        if(span && limit){
+            this.View.setJobInfo(jobStatus, span, limit);
+        }
     }
 
 

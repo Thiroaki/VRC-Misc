@@ -9,10 +9,12 @@ const fs = require('fs');
 const CacheModel = require('./pages/cache/CacheModel');
 const YtdlModel = require('./pages/ytdl/YtdlModel');
 const SettingModel = require("./pages/setting/SettingModel");
+const PicModel = require("./pages/pic/PicModel");
 
 let CachePage;
 let YtdlPage;
 let SettingPage;
+let PicPage;
 
 
 // 初回実行
@@ -20,6 +22,8 @@ $(()=>{
     CachePage = new CacheModel();
     YtdlPage = new YtdlModel();
     SettingPage = new SettingModel();
+    PicPage = new PicModel();
+
     // 最初に表示するページ
     setPage("info");
 
@@ -49,6 +53,8 @@ function setPage(pid) {
             case "setting":
                 SettingPage.onSelect();
                 break;
+            case "pic":
+                PicPage.onSelect();
         }
     }, 10);
 }

@@ -4,21 +4,22 @@
   "description": "Misc tools for VRChat.",
   "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "okou",
   "license": "GPL",
   "devDependencies": {
+    "electron-builder": "^22.4.0",
+    "electron": "^8.1.0",
     "electron-reload": "^1.5.0"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "bulma": "^0.8.0",
-    "electron-builder": "^22.4.0",
     "electron-store": "^5.1.1",
+    "jpn.css": "^1.0.1",
     "jquery": "^3.4.1",
     "node-cron": "^2.0.3",
-    "popper.js": "^1.16.1",
     "request": "^2.88.2"
   }
 }

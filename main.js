@@ -1,9 +1,10 @@
 const { app, Menu, Tray, BrowserWindow } = require('electron');
 const path = require('path');
+const exec = require('child_process').exec;
 
 let mainWindow;
 
-//require("electron-reload")(__dirname);
+require("electron-reload")(__dirname);
 
 function createWindow() {
     //二重起動の防止
@@ -33,11 +34,14 @@ app.on('ready', ()=>{
 
     const contextMenu = Menu.buildFromTemplate([
         {label:'開く', click(menuItem){
-          createWindow();
+            createWindow();
+        }},
+        {label:"サウンドデバイス設定", click(menuItem){
+            exec("C:/Windows/System32/mmsys.cpl",()=>{});
         }},
         {type:'separator'},
         {label:'終了',click(menuItem){
-          app.quit();
+            app.quit();
         }}
     ]);
 

@@ -6,7 +6,7 @@ module.exports = class SettingView{
 
     setUiEvents(){
         // vrcパス変更ボタン
-        $(".change-path").on("click", ()=>{
+        $("#change-vrc-path").on("click", ()=>{
             this.model.onClickChangeVRCPath();
         });
     }
