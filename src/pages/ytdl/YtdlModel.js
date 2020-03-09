@@ -23,9 +23,7 @@ module.exports = class YtdlModel{
         //this.checkYtdlVersion();
 
         if(this.store.get("ytdlJobStatus") != undefined && this.store.get("ytdlJobStatus")){
-            if(this.store.get("ytdlJobText") && this.store.get("ytdlJobLimit")){
-                this.createJob(this.store.get("ytdlJobText"), this.store.get("ytdlJobLimit"));
-            }
+            this.createJob(this.store.get("ytdlJobText"), this.store.get("ytdlJobLimit"));
         }else{
             this.store.set("ytdlJobStatus", false);
         }
@@ -83,8 +81,6 @@ module.exports = class YtdlModel{
         this.updateJob = this.cron.schedule(cronText, async ()=>{
             await this.checkYtdlVersion();
             await this.updateYtdl();
-        }, {
-            scheduled: true
         });
         this.updateJob.start();
         console.log("Job started");

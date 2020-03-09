@@ -16,9 +16,7 @@ module.exports = class CacheModel{
         this.loadCacheStatus();
 
         if(this.store.get("clearJobStatus") != undefined && this.store.get("clearJobStatus")){
-            if(this.store.get("clearJobText") && this.store.get("clearJobLimit")){
-                this.createJob(this.store.get("clearJobText"), this.store.get("clearJobLimit"));
-            }
+            this.createJob(this.store.get("clearJobText"), this.store.get("clearJobLimit"));
         }else{
             this.store.set("clearJobStatus", false);
         }
@@ -76,8 +74,6 @@ module.exports = class CacheModel{
         this.clearJob = this.cron.schedule(cronText, ()=>{
             this.loadCacheStatus();
             this.clearCache(limit);
-        }, {
-            scheduled: true
         });
         this.clearJob.start();
         console.log("Job started");
