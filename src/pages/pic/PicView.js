@@ -4,13 +4,16 @@ module.exports = class CacheView{
 
     }
 
-    setView(){
-
+    setView(arg){
+        $("#path").text(arg.userFolder);
     }
 
     setUiEvents(){
         $(".bkup-path-add").on("click", ()=>{
             this.Model.onClickBuckupAddButton();
+        });
+        $("pic-bkup").on("click", ()=>{
+            this.Model.buckupPic();
         });
     }
 

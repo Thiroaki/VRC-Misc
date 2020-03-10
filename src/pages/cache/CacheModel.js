@@ -131,9 +131,9 @@ module.exports = class CacheModel{
 
     loadCacheStatus(){
         // ファイル配列とトータルサイズ取得
-        const userName = process.env['USERPROFILE'].split(path.sep)[2];
-        const cachepath = ["C:/Users/"+userName+"/AppData/LocalLow/VRChat/VRChat/VRCHTTPCache",
-                    "C:/Users/"+userName+"/AppData/LocalLow/VRChat/VRChat/HTTPCache-WindowsPlayer"];
+        const userFolder = process.env['USERPROFILE'];
+        const cachepath = [`${userFolder}/AppData/LocalLow/VRChat/VRChat/VRCHTTPCache`,
+                    `${userFolder}/AppData/LocalLow/VRChat/VRChat/HTTPCache-WindowsPlayer`];
 
         this.CacheFiles.length = 0;
         let totalSize=0;

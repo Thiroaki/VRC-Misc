@@ -1,22 +1,56 @@
 const { app, Menu, Tray, BrowserWindow } = require('electron');
 const path = require('path');
 const exec = require('child_process').exec;
+const _AutoLaunch = require("auto-launch");
+const _Store = require("electron-store");
 
+let store = new _Store();
 let mainWindow;
+let forseQuit = false;
+
+let autoLaunch = new _AutoLaunch({
+    name:'VRC-Misc',
+    path:app.getPath('exe'),
+  }
+);
+
+autoLaunch.isEnabled()
+    .then((isEnabled)=>{
+        if(isEnabled){
+        return;
+        }
+        //デバッグ時はコメント
+        //autoLaunch.enable();
+    })
+    .catch((err)=>{
+
+    });
 
 require("electron-reload")(__dirname);
 
+//二重起動の防止
+const doubleboot = app.requestSingleInstanceLock();
+if(!doubleboot){
+    app.quit();
+}
+
 function createWindow() {
-    //二重起動の防止
-    const doubleboot = app.requestSingleInstanceLock();
-    if(!doubleboot){
-        app.quit();
+    if(mainWindow && !mainWindow.isDestroyed()){
+        mainWindow.show();
+        mainWindow.focus();
+        return;
     }
 
-    mainWindow = new BrowserWindow({ width: 820, height: 620,
-        'icon': __dirname + '/icon_pre.png',
+    let wb = store.get("windowBounds");
+    if(!wb){
+        wb = {x:510, y:220, width:860, height:600};
+    }
+    mainWindow = new BrowserWindow({
+        x:wb.x, y:wb.y, width: wb.width, height: wb.height,
+        'icon': __dirname + '/icon_pre_64x64.png',
         webPreferences: { nodeIntegration : true}});
-    mainWindow.setMinimumSize(820, 500);
+    mainWindow.setMinimumSize(860, 600);
+    mainWindow.setMaximumSize(860, 0)
     mainWindow.loadURL("file://" + __dirname + "/src/base.html");
 
     // 開発ツールを有効化
@@ -24,14 +58,28 @@ function createWindow() {
 
     Menu.setApplicationMenu(null);
 
+    mainWindow.on("will-resize", (e, newBounds)=>{
+        let windowBounds = {x:newBounds.x, y:newBounds.y, width:newBounds.width, height:newBounds.height};
+        store.set("windowBounds", windowBounds);
+    });
+
+    mainWindow.on('close', (event) => {
+        if(!forseQuit){
+            event.preventDefault();
+            mainWindow.hide();
+        }
+    });
+
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+    
 }
 
 app.on('ready', ()=>{
-    tray = new Tray(__dirname + '/icon_pre.ico');
-
+    //トレイアイコン
+    tray = new Tray(__dirname + '/icon_pre_32x32.png');
+    //トレイのコンテキストメニュー
     const contextMenu = Menu.buildFromTemplate([
         {label:'開く', click(menuItem){
             createWindow();
@@ -41,6 +89,7 @@ app.on('ready', ()=>{
         }},
         {type:'separator'},
         {label:'終了',click(menuItem){
+            forseQuit = true;
             app.quit();
         }}
     ]);
@@ -54,7 +103,7 @@ app.on('ready', ()=>{
         tray.popUpContextMenu(contextMenu);
     });
  
-    //シングルクリック時にリストを表示
+    //シングルクリック時にウィンドウを表示
     tray.on('click',() =>{
         createWindow();
     });
@@ -62,6 +111,4 @@ app.on('ready', ()=>{
     createWindow();
 });
 
-app.on('window-all-closed', () => {
 
-});

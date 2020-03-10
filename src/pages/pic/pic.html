@@ -1,11 +1,11 @@
 <div class="main-content">
     <div class="container mb-4 p-0">
         <div class="section-label">
-            <span>自動バックアップ</span>
+            <span>写真・スクショ</span>
         </div>
-        <div class="p-3 bg-b2 text">
+        <div class="bg-b2 text">
             <div class="row m-0">
-                <div class="bg-b4 m-0 p-2 col-12">
+                <div class="bg-b4 m-0 p-2 col-12 mcard">
                     <div id="bkup-folder">
                         <!-- <div class="row mx-2 mb-1 pb-1 bkup-path">
                             <div class="col">D:/Picture</div>
@@ -29,8 +29,17 @@
             </div>
 
             <div class="row m-0 mt-2">
-                <div class="col">
-                    
+                <div class="col section-text">
+                    <span id="path"></span><span>\Picture\VRChat　の中のファイルがコピーされます。同じ名前は上書きされません。</span>
+                </div>
+                <div class="col-3 p-0 d-flex justify-content-end align-items-center">
+                    <button id="pic-bkup" class="btn btn-light">
+                        <group id="btn-enable">バックアップ</group>
+                        <group id="btn-disable" style="display: none;">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            処理中
+                        </group>
+                    </button>
                 </div>
             </div>
         </div>

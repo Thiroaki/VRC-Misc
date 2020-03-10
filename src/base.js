@@ -5,6 +5,9 @@
 */
 const path = require('path');
 const fs = require('fs');
+const _Store = require("electron-store");
+
+let sotre = new _Store();
 
 const CacheModel = require('./pages/cache/CacheModel');
 const YtdlModel = require('./pages/ytdl/YtdlModel');
@@ -25,8 +28,11 @@ $(()=>{
     PicPage = new PicModel();
 
     // 最初に表示するページ
-    setPage("info");
-
+    if(sotre.get("vrcPath") == undefined){
+        setPage("setting");
+    }else{
+        setPage("info");
+    }
 });
 
 // サイドメニュークリック設定

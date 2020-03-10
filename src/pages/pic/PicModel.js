@@ -4,18 +4,25 @@ module.exports = class CacheModel{
         this.Store = require("electron-store");
         this.cron = require("node-cron");
         this.dialog = require("electron").remote.dialog;
-        this.fs = require("fs");
+        this.fs = require("fs-extra");
 
         this.View = new this.PicView(this);
         this.store = new this.Store();
         
         this.bkupDeleteLock = true;
+        this.picBuckupJob;
+        
+        if(this.store.get("picBuckupJobStatus") != undefined && this.store.get("picBuckupJobStatus")){
+            this.createJob(this.store.get("picBuckupJobText"), this.store.get("picBuckupJobLimit"));
+        }else{
+            this.store.set("picBuckupJobStatus", false);
+        }
     }
 
 
     onSelect(){
         this.setBuckupFolder();
-        this.View.setView();
+        this.View.setView({userFolder:process.env["userprofile"]});
         this.View.setUiEvents();
     }
 
@@ -66,5 +73,49 @@ module.exports = class CacheModel{
             
         }
         this.setBuckupFolder();
+    }
+
+
+    createJob(cronText){
+        this.store.set("picBuckupJobText", cronText);
+        this.store.set("picBuckupJobStatus", true);
+
+        if(this.picBuckupJob != undefined){
+            this.picBuckupJob.destroy();
+        }
+        this.picBuckupJob = this.cron.schedule(cronText, ()=>{
+            this.buckupPic();
+        });
+        this.picBuckupJob.start();
+        console.log("Job started");
+    }
+    destroyJob(){
+        this.store.set("picBuckupJobStatus", false);
+        if(this.picBuckupJob != undefined){
+            this.picBuckupJob.destroy();
+        }
+        console.log("Job deleted");
+    }
+
+    setJobInfo(){
+        let jobStatus = this.store.get("picBuckupJobStatus");
+        let span = this.store.get("picBuckupJobText");
+        let limit = this.store.get("picBuckupJobPath");
+        if(span && limit){
+            this.View.setJobInfo(jobStatus, span, limit);
+        }
+    }
+
+    buckupPicture(){
+        if(this.store.get("picBuckupFolder") == undefined) return;
+
+        const userFolder = process.env['USERPROFILE'];
+        let picFolder = `${userFolder}/Pictures/VRChat`;
+        let buckupFolder = this.store.get("picBuckupFolder");
+
+        buckupFolder.forEach((e)=>{
+            this.fs.copy(picFolder, e, {overwrite:false,preserveTimestamps:true});
+        });
+        
     }
 }

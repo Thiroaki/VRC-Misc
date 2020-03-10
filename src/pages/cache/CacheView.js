@@ -13,6 +13,11 @@ module.exports = class CacheView{
             this.model.onLimitDayChanged($("#limit-day").val());
         });
 
+        for(let i=0; i<24; i++){
+            $("#job-hour").append(`<option value="${i}">${i}時</option>`);
+        }
+        
+
         //定期実行
         $("#cache-regist").on("click", ()=>{
             let limit = $('input[name="limit"').val();

@@ -1,13 +1,13 @@
 <div class="main-content">
     <div class="container mb-4 p-0">
         <div class="section-label">
-            <span>バージョン情報</span>
+            <span>バージョン</span>
             <div class="tips">
                 <i id="ytdl-info" class="far fa-question-circle clickable icon"></i>
-                <div class="tips-disc" style="width: 10rem;">特別な理由が無い限り<br>更新しない方が良いです。</div>
+                <div class="tips-disc" style="width: 10rem">特別な理由が無い限り<br>更新しない方が良いです</div>
             </div>
         </div>
-        <div class="p-3 bg-b2 text">
+        <div class="p-3 bg-b4 text mcard">
             <div class="row">
                 <div class="col">
                     <div>
@@ -29,52 +29,49 @@
             </div>
         </div>
     </div>
-    <div class="container mb-4 p-0">
+
+    <div class="section-div">
+        <hr>
+    </div>
+
+    <div class="container my-4 p-0">
         <div class="section-label">
             <span>定期実行</span>
-            
-            <div class="tips">
-                <i id="schedule-info" class="far fa-question-circle clickable icon"></i>
-                <div class="tips-disc">アプリが起動している時に実行されます。</div>
-            </div>
         </div>
-        <div class="p-3 bg-b2">
-            <div class="bg-b4 m-0 p-2 row">
-                <div class="text col-2 pr-0"><small>現在の設定</small></div>
-                <div class="text col">
-                    間隔：<span id="ytdl-span"></span>
-                </div>
-            </div>
-            <br>
-            <div>
-                <div class="row mb-2">
-                    <div class="col text">
-                        <span>実行する月や時間を、半角、カンマ区切りで入力してください。<br>
-                            曜日は、0(日曜) ～ 6(土曜)<br>
-                            毎月や毎時はアスタリスクで入力出来ます。
-                        </span>
+        
+        <div class="bg-b2">
+            <div class="mb-2">
+                <div class="row m-0 d-flex align-items-center">
+                    <div class="col px-0">
+                        <span class="text">定期的にアップデートする</span>
                     </div>
-                </div>
-                <div class="text row mb-2">
-                    <div class="col">
-                        <div><span class="mx-2">月</span><input type="text" name="month" value=""></div>
-                        <div><span class="mx-2">週</span><input type="text" name="week" value=""></div>
-                        <div><span class="mx-2">日</span><input type="text" name="day" value=""></div>
-                        <div><span class="mx-2">時</span><input type="text" name="hour" value=""></div>
-                        <div><span class="mx-2">分</span><input type="text" name="minute" value=""></div>
-                    </div>
-                </div>
-                <div class="row text">
-                    <div class="col text-right d-flex align-items-center justify-content-end">
-                        <span id="input-error" style="display: none; color:#ff6e6e">半角数字で入力してください</span>
-                        <div class="ml-2">
-                            <button id="ytdl-regist" class="btn btn-light mr-1">登録</button>
-                            <button id="ytdl-unregist" class="btn btn-light">登録解除</button>
+                    <div class="col-1 px-0" style="height: 1.5rem;">
+                        <div class="switchArea">
+                            <input type="checkbox" id="switch1">
+                            <label for="switch1"></label>
+                            <div id="swImg"></div>
                         </div>
                     </div>
-                    
+                </div>
+                <div class="section-text">
+                    <span>アプリが起動している間に実行されます。</span>
                 </div>
             </div>
+
+            <div class="text row m-0 mb-2">
+                <div class="col-2 px-1">
+                    <select id="job-month" class="form-control">
+                        <option value="m4">週1回</option>
+                        <option value="m2">月2回</option>
+                        <option value="m1">月1回</option>
+                    </select>
+                </div>
+                <div class="col-2 px-1">
+                    <select id="job-hour" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <hr>
         </div>
     </div>
 </div>

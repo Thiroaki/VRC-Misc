@@ -2,14 +2,31 @@
     cursor: pointer;
 }
 
+.mcard{
+    border-radius: 4px;
+}
+
 .btn{
-    border-radius: 2px;
-    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: hsl(0, 0%, 97%);
+    background-color: rgb(48, 153, 88);
+    height: 2rem;
+    line-height: 0px;
+    border: hsl(0, 0%, 98%) 0px;
+    border-radius: 3px;
+    padding: 0.25rem 0.75rem;
+}
+
+.btn-disable{
+    line-height: 0px;
 }
 
 .form-control{
-    border-radius: 2px;
-    padding: 0.25rem 0.5rem;
+    height: 2rem;
+    line-height: 0px;
+    border-radius: 3px;
+    padding: 0rem 0.5rem;
 }
 
 #bkup-folder > div{
@@ -57,6 +74,8 @@
     display: inline-block;
 }
 .tips-disc{
+    font-size: 0.75rem;
+    font-weight: normal;
     display: none;
     position: absolute;
     padding: 0.5rem;
@@ -65,7 +84,7 @@
     border: 1px solid #dbdbdb;
     border-radius: 5px;
     background: hsl(0, 0%, 30%);
-    width: 200px;
+    width: 10rem;
 }
 .tips-disc:before{
     content: "";
