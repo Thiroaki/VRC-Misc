@@ -1,4 +1,5 @@
-const { app, Menu, Tray, BrowserWindow } = require('electron');
+const { app, Menu, Tray, BrowserWindow, ipcMain } = require('electron');
+const fs = require("fs");
 const path = require('path');
 const exec = require('child_process').exec;
 const _AutoLaunch = require("auto-launch");
@@ -111,4 +112,8 @@ app.on('ready', ()=>{
     createWindow();
 });
 
-
+ipcMain.on("appVersion", (e, msg)=>{
+    let appVer = JSON.parse(fs.readFileSync("package.json")).version;
+    console.log(appVer);
+    e.reply("appVersion", appVer);
+});

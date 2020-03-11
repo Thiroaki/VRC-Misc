@@ -3,29 +3,29 @@
 基幹プロセス
 アプリ実行中は常に存在する
 */
+const {ipcRenderer} = require("electron");
 const path = require('path');
 const fs = require('fs');
 const _Store = require("electron-store");
 
+let appVersion;
 let sotre = new _Store();
 
+const InfoModel = require("./pages/info/InfoModel");
 const CacheModel = require('./pages/cache/CacheModel');
 const YtdlModel = require('./pages/ytdl/YtdlModel');
 const SettingModel = require("./pages/setting/SettingModel");
 const PicModel = require("./pages/pic/PicModel");
 
-let CachePage;
-let YtdlPage;
-let SettingPage;
-let PicPage;
-
+let InfoPage = new InfoModel();
+let CachePage = new CacheModel();
+let YtdlPage = new YtdlModel();
+let SettingPage = new SettingModel();
+let PicPage = new PicModel();
 
 // 初回実行
 $(()=>{
-    CachePage = new CacheModel();
-    YtdlPage = new YtdlModel();
-    SettingPage = new SettingModel();
-    PicPage = new PicModel();
+    InfoPage.appVersion = appVersion;
 
     // 最初に表示するページ
     if(sotre.get("vrcPath") == undefined){
@@ -50,6 +50,9 @@ function setPage(pid) {
 
     setTimeout(() => {
         switch (pid) {
+            case "info":
+                InfoPage.onSelect();
+                break;
             case "cache":
                 CachePage.onSelect();
                 break;
@@ -64,3 +67,9 @@ function setPage(pid) {
         }
     }, 10);
 }
+
+
+ipcRenderer.on("appVersion", (e, msg)=>{
+    appVersion = msg;
+});
+ipcRenderer.send("appVersion", "");
