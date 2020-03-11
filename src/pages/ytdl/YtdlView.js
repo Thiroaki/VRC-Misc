@@ -3,59 +3,48 @@ module.exports = class YtdlView{
         this.Model = model;
     }
 
-    setVersion(remote, local){
-        $("#remotever").text(remote);
-        $("#localver").text(local);
+    setView(){
+        for(let i=0; i<24; i++){
+            $("#job-hour").append(`<option value="${i}">${i}時</option>`);
+        }
+
     }
 
-    setView(){
+    setUiEvents(){
         //情報
         $("#ytdl-update").on("click", ()=>{
             this.Model.onClickUpdateButton();
         });
 
         //定期実行
-        $("#ytdl-regist").on("click", ()=>{
-            let month = $('input[name="month"]').val();
-            let week = $('input[name="week"]').val();
-            let day = $('input[name="day"]').val();
-            let hour = $('input[name="hour"]').val();
-            let minute = $('input[name="minute"]').val();
-            let regex = /^(\d|,|-|\*)*$/;
-
-            if(regex.test(month)&&regex.test(week)&&regex.test(day)&&regex.test(hour)&&regex.test(minute)){
-                let cronText = minute +" "+ hour +" "+ day +" "+ month +" "+ week;
-                this.Model.onRegistButton(cronText);
+        $("#job-switch input[type='checkbox']").on("change", ()=>{
+            let bool = $("#job-switch input[type='checkbox']").prop('checked');
+            let month = $('#job-month').val();
+            let hour = $('#job-hour').val();
+            if(bool){
+                this.Model.onRegist(month, hour);
             }else{
-                $("#input-error").fadeIn(200, ()=>{
-                    setTimeout(()=>{
-                        $("#input-error").fadeOut(200);
-                    }, 4000);
-                });
+                this.Model.onUnRegist();
             }
         });
 
-        $("#ytdl-unregist").on("click", ()=>{
-            this.Model.onUnRegistButton();
-        });
     }
 
 
-    setJobInfo(jobStatus, span){
-        let d = span.split(" ");
-        $('input[name="month"]').val(d[4]);
-        $('input[name="week"]').val(d[3]);
-        $('input[name="day"]').val(d[2]);
-        $('input[name="hour"]').val(d[1]);
-        $('input[name="minute"]').val(d[0]);
+    setVersion(remote, local){
+        $("#remotever").text(remote);
+        $("#localver").text(local);
+    }
 
-        if(jobStatus){
-            $("#ytdl-span").text(span);
-        }else{
-            $("#ytdl-span").text("");
-        }
-        console.log(jobStatus);
+    setJobInfo(status, month, hour){
+        console.log(status, month, hour);
         
+        $('#job-month').val(month);
+        $('#job-hour').val(hour);
+
+        if(status){
+            $("#job-switch input[type='checkbox']").prop('checked', true);
+        }        
     }
 
     setUpdateButtonEnable(){

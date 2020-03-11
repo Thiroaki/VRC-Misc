@@ -20,12 +20,14 @@ module.exports = class YtdlModel{
         this.updateJob;
 
         // 起動時処理
-        //this.checkYtdlVersion();
+        this.checkYtdlVersion();
 
-        if(this.store.get("ytdlJobStatus") != undefined && this.store.get("ytdlJobStatus")){
-            this.createJob(this.store.get("ytdlJobText"), this.store.get("ytdlJobLimit"));
+        this.ytdlJob = this.store.get("ytdlJob");
+        if(this.ytdlJob != undefined && this.ytdlJob.status){
+            this.createJob(this.ytdlJob.month, this.ytdlJob.hour);
         }else{
-            this.store.set("ytdlJobStatus", false);
+            this.ytdlJob = {status:false, month:"1", hour:"0"}
+            this.store.set("ytdlJob", this.ytdlJob);
         }
     }
 
@@ -37,6 +39,7 @@ module.exports = class YtdlModel{
         this.ChecksumDownloadUrl = this.store.get("chsumDlUrl");
 
         this.View.setView();
+        this.View.setUiEvents();
         this.updateVersionInfo()
         this.setJobInfo();
     }
@@ -45,35 +48,34 @@ module.exports = class YtdlModel{
     async onClickUpdateButton(){
         if(!this.UpdateLocked){
             this.UpdateLocked = true;
-            this.View.setUpdateButtonDisable();
+            this.View.setUpdateDisable();
 
             await this.checkYtdlVersion();
             await this.updateYtdl();
 
             setTimeout(() => {
                 this.updateVersionInfo();
-                this.View.setUpdateButtonEnable();
+                this.View.setUpdateEnable();
                 this.UpdateLocked = false;
             }, 200);
         }
     }
 
-    onRegistButton(cronText){
-        if (this.cron.validate(cronText)){
-            this.createJob(cronText);
-        }
-        this.setJobInfo();
+    onRegist(month, hour){
+        this.createJob(month, hour);
     }
-    onUnRegistButton(){
+    onUnRegist(){
         this.destroyJob();
-        this.setJobInfo();
     }
 
 
 
-    createJob(cronText){
-        this.store.set("ytdlJobText", cronText);
-        this.store.set("ytdlJobStatus", true);
+    createJob(month, hour){
+        this.ytdlJob = {status:true, month:month, hour:hour};
+        this.store.set("ytdlJob", this.ytdlJob);
+
+        //月1:24日毎  月2:12日毎  週一:6日毎
+        let cronText = `* ${hour} */${24/month} * *`;
 
         if(this.updateJob != undefined){
             this.updateJob.destroy();
@@ -86,21 +88,18 @@ module.exports = class YtdlModel{
         console.log("Job started");
     }
     destroyJob(){
-        this.store.set("ytdlJobStatus", false);
+        this.ytdlJob.status = false;
+        this.store.set("ytdlJob", this.ytdlJob);
         if(this.updateJob != undefined){
             this.updateJob.destroy();
-        }
-        console.log("Job deleted");
+            console.log("Job deleted");
+        }        
     }
 
     setJobInfo(){
-        let jobStatus = this.store.get("ytdlJobStatus");
-        let span = this.store.get("ytdlJobText");
-
-        if(jobStatus && span){
-            this.View.setJobInfo(jobStatus, span);
-        }
+        this.View.setJobInfo(this.ytdlJob.status, this.ytdlJob.month, this.ytdlJob.hour);
     }
+
 
 
     updateVersionInfo(){

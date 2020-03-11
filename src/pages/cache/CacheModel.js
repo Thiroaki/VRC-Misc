@@ -15,10 +15,12 @@ module.exports = class CacheModel{
 
         this.loadCacheStatus();
 
-        if(this.store.get("clearJobStatus") != undefined && this.store.get("clearJobStatus")){
-            this.createJob(this.store.get("clearJobText"), this.store.get("clearJobLimit"));
+        this.cacheJob = this.store.get("cacheJob");
+        if(this.cacheJob != undefined && this.cacheJob.status){
+            this.createJob(this.cacheJob.month, this.cacheJob.hour, this.cacheJob.limit);
         }else{
-            this.store.set("clearJobStatus", false);
+            this.cacheJob = {status:false, month:"1", hour:"0", limit:"30"}
+            this.store.set("cacheJob", this.cacheJob);
         }
     }
 
@@ -50,24 +52,22 @@ module.exports = class CacheModel{
         }
     }
 
-    onRegistButton(cronText, limit){
-        if (this.cron.validate(cronText)){
-            this.createJob(cronText, limit);
-        }
-        this.setJobInfo();
+    onRegist(month, hour, limit){
+        this.createJob(month, hour, limit);
     }
-    onUnRegistButton(){
+    onUnRegist(){
         this.destroyJob();
-        this.setJobInfo();
     }
 
 
 
-    createJob(cronText, limit){
-        this.store.set("clearJobText", cronText);
-        this.store.set("clearJobLimit", limit);
-        this.store.set("clearJobStatus", true);
+    createJob(month, hour, limit){
+        this.cacheJob = {status:true, month:month, hour:hour, limit:limit};
+        this.store.set("cacheJob", this.cacheJob);
 
+        //月1:24日毎  月2:12日毎  週一:6日毎
+        let cronText = `* ${hour} */${24/month} * *`;
+        
         if(this.clearJob != undefined){
             this.clearJob.destroy();
         }
@@ -79,20 +79,16 @@ module.exports = class CacheModel{
         console.log("Job started");
     }
     destroyJob(){
-        this.store.set("clearJobStatus", false);
+        this.cacheJob.status = false
+        this.store.set("cacheJob", this.cacheJob);
         if(this.clearJob != undefined){
             this.clearJob.destroy();
+            console.log("Job deleted");
         }
-        console.log("Job deleted");
     }
 
     setJobInfo(){
-        let jobStatus = this.store.get("clearJobStatus");
-        let span = this.store.get("clearJobText");
-        let limit = this.store.get("clearJobLimit");
-        if(span && limit){
-            this.View.setJobInfo(jobStatus, span, limit);
-        }
+        this.View.setJobInfo(this.cacheJob.status, this.cacheJob.month, this.cacheJob.hour, this.cacheJob.limit);
     }
 
 

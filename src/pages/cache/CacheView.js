@@ -4,6 +4,12 @@ module.exports = class CacheView{
 
     }
 
+    setView(){
+        for(let i=0; i<24; i++){
+            $("#job-hour").append(`<option value="${i}">${i}時</option>`);
+        }
+    }
+
     setUiEvents(){
         //キャッシュ情報
         $("#cache-clear").on("click", ()=>{
@@ -13,44 +19,24 @@ module.exports = class CacheView{
             this.model.onLimitDayChanged($("#limit-day").val());
         });
 
-        for(let i=0; i<24; i++){
-            $("#job-hour").append(`<option value="${i}">${i}時</option>`);
-        }
-        
-
         //定期実行
-        $("#cache-regist").on("click", ()=>{
-            let limit = $('input[name="limit"').val();
-            let month = $('input[name="month"]').val();
-            let week = $('input[name="week"]').val();
-            let day = $('input[name="day"]').val();
-            let hour = $('input[name="hour"]').val();
-            let minute = $('input[name="minute"]').val();
-            let regex = /^(\d|,|-|\*)*$/;
-
-            if(regex.test(month)&&regex.test(week)&&regex.test(day)&&regex.test(hour)&&regex.test(minute)){
-                let cronText = minute +" "+ hour +" "+ day +" "+ month +" "+ week;
-                this.model.onRegistButton(cronText, limit);
+        $("#job-switch input[type='checkbox']").on("change", ()=>{
+            let bool = $("#job-switch input[type='checkbox']").prop('checked');
+            let limit = $('#job-limit').val();
+            let month = $('#job-month').val();
+            let hour = $('#job-hour').val();
+            if(bool){
+                this.model.onRegist(month, hour, limit);
             }else{
-                $("#input-error").fadeIn(200, ()=>{
-                    setTimeout(()=>{
-                        $("#input-error").fadeOut(200);
-                    }, 4000);
-                });
+                this.model.onUnRegist();
             }
         });
 
-        $("#cache-unregist").on("click", ()=>{
-            this.model.onUnRegistButton();
-        });
     }
 
-    setView(){
-        
-    }
 
     setLimitDay(limit){
-        $("#limit-day").val(limit);
+        if(limit) $("#limit-day").val(limit);
     }
 
     setCacheInfo(count, size){
@@ -58,23 +44,15 @@ module.exports = class CacheView{
         $("#total-size").text(size);
     }
 
-    setJobInfo(jobStatus, span, limit){
-        let d = span.split(" ");
-        $('input[name="limit"]').val(limit);
-        $('input[name="month"]').val(d[4]);
-        $('input[name="week"]').val(d[3]);
-        $('input[name="day"]').val(d[2]);
-        $('input[name="hour"]').val(d[1]);
-        $('input[name="minute"]').val(d[0]);
+    setJobInfo(status, month, hour, limit){
+        $("#job-month").val(month);
+        $("#job-hour").val(hour);
+        $("#job-limit").val(limit);
 
-        if(jobStatus){
-            $("#cache-span").text(span);
-            $("#cache-limit").text(limit+"日");
-        }else{
-            $("#cache-span").text("");
-            $("#cache-limit").text("");
+        if(status){
+            $("#job-switch input[type='checkbox']").prop('checked', true);
         }
-        console.log(jobStatus);
+        console.log(status);
         
     }
 
