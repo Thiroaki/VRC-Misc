@@ -61,11 +61,12 @@ module.exports = class YtdlModel{
         }
     }
 
-    onRegist(month, hour){
-        this.createJob(month, hour);
-    }
-    onUnRegist(){
-        this.destroyJob();
+    onRegist(status, month, hour){
+        if(status){
+            this.createJob(month, hour);
+        }else{
+            this.destroyJob();
+        }
     }
 
 

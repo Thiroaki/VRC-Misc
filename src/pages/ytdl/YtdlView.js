@@ -18,18 +18,20 @@ module.exports = class YtdlView{
 
         //定期実行
         $("#job-switch input[type='checkbox']").on("change", ()=>{
-            let bool = $("#job-switch input[type='checkbox']").prop('checked');
-            let month = $('#job-month').val();
-            let hour = $('#job-hour').val();
-            if(bool){
-                this.Model.onRegist(month, hour);
-            }else{
-                this.Model.onUnRegist();
-            }
+            this.changeJobParam();
+        });
+        $("#job-param").on("change", ()=>{
+            this.changeJobParam();
         });
 
     }
 
+    changeJobParam(){
+        let status = $("#job-switch input[type='checkbox']").prop('checked');
+        let month = $('#job-month').val();
+        let hour = $('#job-hour').val();
+        this.Model.onRegist(status, month, hour);
+    }
 
     setVersion(remote, local){
         $("#remotever").text(remote);

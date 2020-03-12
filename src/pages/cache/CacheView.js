@@ -21,17 +21,20 @@ module.exports = class CacheView{
 
         //定期実行
         $("#job-switch input[type='checkbox']").on("change", ()=>{
-            let bool = $("#job-switch input[type='checkbox']").prop('checked');
-            let limit = $('#job-limit').val();
-            let month = $('#job-month').val();
-            let hour = $('#job-hour').val();
-            if(bool){
-                this.model.onRegist(month, hour, limit);
-            }else{
-                this.model.onUnRegist();
-            }
+            this.changeJobParam();
+        });
+        $("#job-param").on("change", ()=>{
+            this.changeJobParam();
         });
 
+    }
+
+    changeJobParam(){
+        let status = $("#job-switch input[type='checkbox']").prop('checked');
+        let limit = $('#job-limit').val();
+        let month = $('#job-month').val();
+        let hour = $('#job-hour').val();
+        this.model.onRegist(status, month, hour, limit);
     }
 
 

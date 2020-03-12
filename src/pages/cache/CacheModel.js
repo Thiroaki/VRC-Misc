@@ -52,11 +52,12 @@ module.exports = class CacheModel{
         }
     }
 
-    onRegist(month, hour, limit){
-        this.createJob(month, hour, limit);
-    }
-    onUnRegist(){
-        this.destroyJob();
+    onRegist(status, month, hour, limit){
+        if(status){
+            this.createJob(month, hour, limit);
+        }else{
+            this.destroyJob();
+        }
     }
 
 
