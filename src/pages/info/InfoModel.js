@@ -1,12 +1,11 @@
 module.exports = class InfoModel{
     constructor(){
+        this.remote =  require("electron").remote;
         this.fs = require("fs");
         this._Store = require("electron-store");
         this.InfoView = require("./InfoView");
         this.View = new this.InfoView(this);
         this.store = new this._Store;
-
-        this.appVersion = "";
     }
 
     onSelect(){
@@ -16,7 +15,7 @@ module.exports = class InfoModel{
     }
 
     setVersion(){
-        this.View.setVersion(this.appVersion);
+        this.View.setVersion("v"+this.remote.app.getVersion());
     }
 
     

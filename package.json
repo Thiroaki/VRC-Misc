@@ -1,11 +1,13 @@
 {
   "name": "VRC-Misc",
-  "version": "1.0.0",
+  "version": "0.0.4",
   "description": "Misc tools for VRChat.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always"
   },
   "author": "okou",
   "license": "GPL",
@@ -17,12 +19,35 @@
   "dependencies": {
     "auto-launch": "^5.0.5",
     "bootstrap": "^4.4.1",
+    "electron-log": "^4.0.7",
     "electron-store": "^5.1.1",
+    "electron-updater": "^4.2.4",
     "fs-extra": "^8.1.0",
     "jpn.css": "^1.0.1",
     "jquery": "^3.4.1",
     "node-cron": "^2.0.3",
     "popper.js": "^1.16.1",
     "request": "^2.88.2"
+  },
+  "build": {
+    "publish":[
+      {
+        "provider": "github",
+        "owner": "Thiroaki",
+        "repo": "VRC-Misc"
+      }
+    ],
+    "win":{
+      "publish":[
+        "github"
+      ],
+      "icon": "icon_pre.ico",
+      "target": {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    }
   }
 }

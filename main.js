@@ -2,32 +2,19 @@ const { app, Menu, Tray, BrowserWindow, ipcMain } = require('electron');
 const fs = require("fs");
 const path = require('path');
 const exec = require('child_process').exec;
-const _AutoLaunch = require("auto-launch");
 const _Store = require("electron-store");
+const {autoUpdater} = require("electron-updater");
 
 let store = new _Store();
 let mainWindow;
 let forseQuit = false;
 
-let autoLaunch = new _AutoLaunch({
-    name:'VRC-Misc',
-    path:app.getPath('exe'),
-  }
-);
+app.setLoginItemSettings({
+    openAtLogin: true,
+    openAsHidden: true
+});
 
-autoLaunch.isEnabled()
-    .then((isEnabled)=>{
-        if(isEnabled){
-        return;
-        }
-        //デバッグ時はコメント
-        //autoLaunch.enable();
-    })
-    .catch((err)=>{
-
-    });
-
-require("electron-reload")(__dirname);
+//require("electron-reload")(__dirname);
 
 //二重起動の防止
 const doubleboot = app.requestSingleInstanceLock();
@@ -39,23 +26,24 @@ function createWindow() {
     if(mainWindow && !mainWindow.isDestroyed()){
         mainWindow.show();
         mainWindow.focus();
+        autoUpdater.checkForUpdates();
         return;
     }
 
     let wb = store.get("windowBounds");
     if(!wb){
-        wb = {x:510, y:220, width:860, height:600};
+        wb = {x:50, y:30, width:860, height:530};
     }
     mainWindow = new BrowserWindow({
         x:wb.x, y:wb.y, width: wb.width, height: wb.height,
         'icon': __dirname + '/icon_pre_64x64.png',
         webPreferences: { nodeIntegration : true}});
-    mainWindow.setMinimumSize(860, 600);
+    mainWindow.setMinimumSize(860, 530);
     mainWindow.setMaximumSize(860, 0)
     mainWindow.loadURL("file://" + __dirname + "/src/base.html");
 
     // 開発ツールを有効化
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 
     Menu.setApplicationMenu(null);
 
@@ -110,10 +98,5 @@ app.on('ready', ()=>{
     });
 
     createWindow();
-});
 
-ipcMain.on("appVersion", (e, msg)=>{
-    let appVer = JSON.parse(fs.readFileSync("package.json")).version;
-    console.log(appVer);
-    e.reply("appVersion", appVer);
 });

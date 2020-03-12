@@ -25,8 +25,6 @@ let PicPage = new PicModel();
 
 // 初回実行
 $(()=>{
-    InfoPage.appVersion = appVersion;
-
     // 最初に表示するページ
     if(sotre.get("vrcPath") == undefined){
         setPage("setting");
@@ -67,9 +65,3 @@ function setPage(pid) {
         }
     }, 10);
 }
-
-
-ipcRenderer.on("appVersion", (e, msg)=>{
-    appVersion = msg;
-});
-ipcRenderer.send("appVersion", "");
