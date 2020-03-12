@@ -26,13 +26,12 @@ function createWindow() {
     if(mainWindow && !mainWindow.isDestroyed()){
         mainWindow.show();
         mainWindow.focus();
-        autoUpdater.checkForUpdates();
         return;
     }
 
     let wb = store.get("windowBounds");
     if(!wb){
-        wb = {x:50, y:30, width:860, height:530};
+        wb = {width:860, height:530};
     }
     mainWindow = new BrowserWindow({
         x:wb.x, y:wb.y, width: wb.width, height: wb.height,
@@ -47,7 +46,13 @@ function createWindow() {
 
     Menu.setApplicationMenu(null);
 
+    //スケーリングしてると変になる
     mainWindow.on("will-resize", (e, newBounds)=>{
+        let windowBounds = {x:newBounds.x, y:newBounds.y, width:newBounds.width, height:newBounds.height};
+        store.set("windowBounds", windowBounds);
+    });
+
+    mainWindow.on("will-move", (e, newBounds)=>{
         let windowBounds = {x:newBounds.x, y:newBounds.y, width:newBounds.width, height:newBounds.height};
         store.set("windowBounds", windowBounds);
     });
@@ -57,6 +62,7 @@ function createWindow() {
             event.preventDefault();
             mainWindow.hide();
         }
+        autoUpdater.checkForUpdates();
     });
 
     mainWindow.on('closed', () => {

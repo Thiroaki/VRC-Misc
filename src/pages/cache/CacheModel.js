@@ -77,7 +77,7 @@ module.exports = class CacheModel{
             this.clearCache(limit);
         });
         this.clearJob.start();
-        console.log("Job started");
+        console.log("Job started", month, hour, limit);
     }
     destroyJob(){
         this.cacheJob.status = false

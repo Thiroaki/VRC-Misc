@@ -48,14 +48,14 @@ module.exports = class YtdlModel{
     async onClickUpdateButton(){
         if(!this.UpdateLocked){
             this.UpdateLocked = true;
-            this.View.setUpdateDisable();
+            this.View.setUpdateButtonDisable();
 
             await this.checkYtdlVersion();
             await this.updateYtdl();
 
             setTimeout(() => {
                 this.updateVersionInfo();
-                this.View.setUpdateEnable();
+                this.View.setUpdateButtonEnable();
                 this.UpdateLocked = false;
             }, 200);
         }
@@ -86,7 +86,7 @@ module.exports = class YtdlModel{
             await this.updateYtdl();
         });
         this.updateJob.start();
-        console.log("Job started");
+        console.log("Job started", month, hour);
     }
     destroyJob(){
         this.ytdlJob.status = false;
@@ -109,8 +109,8 @@ module.exports = class YtdlModel{
 
     updateYtdl(){
         return new Promise((resolve, reject)=>{
-            let ytdl_path = this.store.get("vrcPath") + "/VRChat_Data/StreamingAssets/youtube-dl.exe";
-            let bkup_path = this.store.get("vrcPath") + `/VRChat_Data/StreamingAssets/youtube-dl_${this.localVersion}.exe`;
+            let ytdl_path = this.store.get("vrcPath") + `\\VRChat_Data\\StreamingAssets\\youtube-dl.exe`;
+            let bkup_path = this.store.get("vrcPath") + `\\VRChat_Data\\StreamingAssets\\youtube-dl_${this.localVersion}.exe`;
             let checksum;
             //チェックサム検証
             this.request({method:"get", url:this.ChecksumDownloadUrl}, (err,res,body)=>{
@@ -151,10 +151,12 @@ module.exports = class YtdlModel{
             });
             //ローカル
             let vrcPath = this.store.get("vrcPath");
-            let ytdl_path = vrcPath + "/VRChat_Data/StreamingAssets/youtube-dl.exe";
+            let ytdl_path = '"' + vrcPath + '\\VRChat_Data\\StreamingAssets\\youtube-dl.exe"';
+            console.log(ytdl_path);
+            
             this.exec(ytdl_path+" --version", (err, out, stderr) => {
-                this.localVersion = out;
-                this.store.set("localVer", out);
+                this.localVersion = out.replace(/\r?\n/g, '');;
+                this.store.set("localVer", this.localVersion);
                 if(err){
                     reject("local check error");
                 }else{
