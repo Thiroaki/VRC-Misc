@@ -12,8 +12,8 @@ module.exports = class CacheView{
         $(".bkup-path-add").on("click", ()=>{
             this.Model.onClickBuckupAddButton();
         });
-        $("pic-bkup").on("click", ()=>{
-            this.Model.buckupPic();
+        $("#pic-bkup").on("click", ()=>{
+            this.Model.onClickBuckupButton();
         });
     }
 
@@ -37,4 +37,14 @@ module.exports = class CacheView{
         });
     }
 
+    setBkupButtonEnable(){
+        $("#pic-bkup").prop("disabled", false);
+        $("#pic-bkup > #btn-disable").hide();
+        $("#pic-bkup > #btn-enable").fadeIn(200);
+    }
+    setBkupButtonDisable(){
+        $("#pic-bkup").prop("disabled", true);
+        $("#pic-bkup > #btn-enable").hide();
+        $("#pic-bkup > #btn-disable").fadeIn(200);
+    }
 }

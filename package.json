@@ -1,6 +1,6 @@
 {
   "name": "VRC-Misc",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Misc tools for VRChat.",
   "main": "main.js",
   "scripts": {

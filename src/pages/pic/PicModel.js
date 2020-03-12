@@ -46,6 +46,14 @@ module.exports = class CacheModel{
         }
     }
 
+    async onClickBuckupButton(){
+        console.log("click");
+        
+        this.View.setBkupButtonDisable();
+        await this.buckupPicture();
+        this.View.setBkupButtonEnable();
+    }
+
 
     setBuckupFolder(){
         if(this.store.get("picBuckupFolder") != undefined){
@@ -84,7 +92,7 @@ module.exports = class CacheModel{
             this.picBuckupJob.destroy();
         }
         this.picBuckupJob = this.cron.schedule(cronText, ()=>{
-            this.buckupPic();
+            this.buckupPicture();
         });
         this.picBuckupJob.start();
         console.log("Job started");
@@ -107,15 +115,35 @@ module.exports = class CacheModel{
     }
 
     buckupPicture(){
-        if(this.store.get("picBuckupFolder") == undefined) return;
+        return new Promise((resolve, reject) =>{
+            console.log("bkup start");
+            
+            if(this.store.get("picBuckupFolder") == undefined){
+                reject("Folder not set")
+                return;
+            }
 
-        const userFolder = process.env['USERPROFILE'];
-        let picFolder = `${userFolder}/Pictures/VRChat`;
-        let buckupFolder = this.store.get("picBuckupFolder");
+            const userFolder = process.env['USERPROFILE'];
+            let picFolder = `${userFolder}\\Pictures\\VRChat`;
+            let buckupFolder = this.store.get("picBuckupFolder");
+            let finishCount = 0;
 
-        buckupFolder.forEach((e)=>{
-            this.fs.copy(picFolder, e, {overwrite:false,preserveTimestamps:true});
+            buckupFolder.forEach((e)=>{
+                this.fs.copy(picFolder, e, {overwrite:false,preserveTimestamps:true})
+                .then(()=>{ finishCount++ });
+            });
+
+            let finish = ()=>{
+                setTimeout(() => {
+                    if(finishCount += buckupFolder.length){
+                        console.log("bkup finish");
+                        resolve("bkup finish");
+                    }else{
+                        finish();
+                    }
+                }, 1000);
+            }
+            finish();
         });
-        
     }
 }

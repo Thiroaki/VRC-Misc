@@ -61,12 +61,12 @@ module.exports = class CacheView{
 
     setClearButtonEnable(){
         $("#cache-clear").prop("disabled", false);
-        $("#cache-clear > .btn-disable").hide();
-        $("#cache-clear > .btn-enable").fadeIn(200);
+        $("#cache-clear > #btn-disable").hide();
+        $("#cache-clear > #btn-enable").fadeIn(200);
     }
     setClearButtonDisable(){
         $("#cache-clear").prop("disabled", true);
-        $("#cache-clear > .btn-enable").hide();
-        $("#cache-clear > .btn-disable").fadeIn(200);
+        $("#cache-clear > #btn-enable").hide();
+        $("#cache-clear > #btn-disable").fadeIn(200);
     }
 }

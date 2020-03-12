@@ -109,6 +109,10 @@ module.exports = class YtdlModel{
 
     updateYtdl(){
         return new Promise((resolve, reject)=>{
+            if (this.store.get("remoteVer") == this.store.get("localVer")){
+                return;
+            }
+            
             let ytdl_path = this.store.get("vrcPath") + `\\VRChat_Data\\StreamingAssets\\youtube-dl.exe`;
             let bkup_path = this.store.get("vrcPath") + `\\VRChat_Data\\StreamingAssets\\youtube-dl_${this.localVersion}.exe`;
             let checksum;
@@ -152,7 +156,6 @@ module.exports = class YtdlModel{
             //ローカル
             let vrcPath = this.store.get("vrcPath");
             let ytdl_path = '"' + vrcPath + '\\VRChat_Data\\StreamingAssets\\youtube-dl.exe"';
-            console.log(ytdl_path);
             
             this.exec(ytdl_path+" --version", (err, out, stderr) => {
                 this.localVersion = out.replace(/\r?\n/g, '');;
