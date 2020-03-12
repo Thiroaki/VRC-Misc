@@ -1,6 +1,6 @@
 {
   "name": "VRC-Misc",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Misc tools for VRChat.",
   "main": "main.js",
   "scripts": {
@@ -41,7 +41,7 @@
       "publish":[
         "github"
       ],
-      "icon": "icon_pre.ico",
+      "icon": "icon.ico",
       "target": {
         "target": "nsis",
         "arch": [

@@ -35,7 +35,6 @@ function createWindow() {
     }
     mainWindow = new BrowserWindow({
         x:wb.x, y:wb.y, width: wb.width, height: wb.height,
-        'icon': __dirname + '/icon_pre_64x64.png',
         webPreferences: { nodeIntegration : true}});
     mainWindow.setMinimumSize(860, 530);
     mainWindow.setMaximumSize(860, 0)
@@ -73,7 +72,7 @@ function createWindow() {
 
 app.on('ready', ()=>{
     //トレイアイコン
-    tray = new Tray(__dirname + '/icon_pre_32x32.png');
+    tray = new Tray();
     //トレイのコンテキストメニュー
     const contextMenu = Menu.buildFromTemplate([
         {label:'開く', click(menuItem){
