@@ -72,7 +72,7 @@ function createWindow() {
 
 app.on('ready', ()=>{
     //トレイアイコン
-    tray = new Tray();
+    tray = new Tray(__dirname + '/icon.ico');
     //トレイのコンテキストメニュー
     const contextMenu = Menu.buildFromTemplate([
         {label:'開く', click(menuItem){
