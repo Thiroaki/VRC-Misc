@@ -1,7 +1,7 @@
 {
-  "name": "VRC-Misc",
-  "version": "1.0.0",
-  "description": "Misc tools for VRChat.",
+  "name": "VRCMisc",
+  "version": "1.0.1",
+  "description": "VRCMisc",
   "main": "main.js",
   "scripts": {
     "start": "electron .",

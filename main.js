@@ -61,7 +61,6 @@ function createWindow() {
             event.preventDefault();
             mainWindow.hide();
         }
-        autoUpdater.checkForUpdates();
     });
 
     mainWindow.on('closed', () => {
@@ -102,6 +101,10 @@ app.on('ready', ()=>{
         createWindow();
     });
 
-    createWindow();
+    //createWindow();
+
+    setInterval(() => {
+        autoUpdater.checkForUpdates();
+    }, 60*60*1000);
 
 });
