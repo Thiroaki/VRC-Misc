@@ -16,12 +16,14 @@ const CacheModel = require('./pages/cache/CacheModel');
 const YtdlModel = require('./pages/ytdl/YtdlModel');
 const SettingModel = require("./pages/setting/SettingModel");
 const PicModel = require("./pages/pic/PicModel");
+const FriendModel = require("./pages/friend/FriendModel");
 
 let InfoPage = new InfoModel();
 let CachePage = new CacheModel();
 let YtdlPage = new YtdlModel();
 let SettingPage = new SettingModel();
 let PicPage = new PicModel();
+let FriendPage = new FriendModel();
 
 // 初回実行
 $(()=>{
@@ -62,6 +64,8 @@ function setPage(pid) {
                 break;
             case "pic":
                 PicPage.onSelect();
+            case "friend":
+                FriendPage.onSelect();
         }
     }, 10);
 }
