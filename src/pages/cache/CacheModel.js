@@ -4,6 +4,8 @@ module.exports = class CacheModel{
         this.CacheView = require("./CacheView");
         this.Store = require("electron-store");
         this.cron = require("node-cron");
+        this.fs = require("fs");
+        this.path = require("path");
         this.View = new this.CacheView(this);
         this.store = new this.Store();
         
@@ -101,7 +103,7 @@ module.exports = class CacheModel{
             let file = this.CacheFiles[i];
             let distDays = (nowDate - file.atime) / 86400000;
             if (distDays > limit) {
-                fs.unlink(file.name, (err)=>{});
+                this.fs.unlink(file.name, (err)=>{});
                 cnt++;
             }
         }
@@ -137,13 +139,13 @@ module.exports = class CacheModel{
         let totalCount=0;
 
         for(let i=0; i<cachepath.length; i++){
-            if(path.isAbsolute(cachepath[i])){
+            if(this.path.isAbsolute(cachepath[i])){
                 try{
-                    let files = fs.readdirSync(cachepath[i]);
+                    let files = this.fs.readdirSync(cachepath[i]);
                     for (let j=0; j < files.length; j++) {
                         let file = files[j];
-                        let fp = path.join(cachepath[i], file);
-                        let stat = fs.statSync(fp);
+                        let fp = this.path.join(cachepath[i], file);
+                        let stat = this.fs.statSync(fp);
                         if (!stat.isDirectory()) {
                             // キャッシュファイル1個に対しての処理
                             totalCount++;

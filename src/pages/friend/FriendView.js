@@ -1,6 +1,6 @@
 module.exports = class FriendView{
     constructor(model){
-        this.dialog = require('electron').remote.dialog;
+        this.ipcRenderer = require("electron").ipcRenderer;
         this.Model = model;
         this.logPath = "";
     }
@@ -11,12 +11,9 @@ module.exports = class FriendView{
 
     setUiEvents(){
         $("#change-log-save-dir").on("click", ()=>{
-            let path = this.dialog.showOpenDialogSync(null, {
-                properties: ['openDirectory'],
-                defaultPath: 'C:\\'
-            });
-            this.logPath = path[0];
-            $("#log-save-dir").text(path[0]);
+            let path = this.ipcRenderer.sendSync("openDialogSelectDir", ".");
+            this.logPath = path;
+            $("#log-save-dir").text(path);
             this.changeSaveLogParam();
         });
         $("#save-log").on("change", ()=>{

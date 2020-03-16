@@ -1,4 +1,4 @@
-const { app, Menu, Tray, BrowserWindow, ipcMain } = require('electron');
+const { app, Menu, Tray, BrowserWindow, ipcMain, dialog } = require('electron');
 const fs = require("fs");
 const path = require('path');
 const exec = require('child_process').exec;
@@ -90,6 +90,29 @@ app.on('ready', ()=>{
             launchDesktopMode();
         }},
         {type:'separator'},
+        {label:"アップデート確認", click(){
+            autoUpdater.checkForUpdatesAndNotify()
+            .then((res)=>{
+                console.log(res.updateInfo);
+                console.log(res.versionInfo);
+                res.downloadPromise.then(()=>{
+                    dialog.showMessageBox(
+                        mainWindow,
+                        {
+                            type: "info",
+                            buttons: ["No", "Yes"],
+                            message: "新しいバージョンをダウンロードしました。再起動しますか？"
+                        },
+                        res => {
+                            if (res === 0){
+                                autoUpdater.quitAndInstall()
+                            }
+                        }
+                    )
+                });
+            });
+        }},
+        {type:'separator'},
         {label:'終了',click(menuItem){
             forseQuit = true;
             app.quit();
@@ -110,13 +133,17 @@ app.on('ready', ()=>{
         createWindow();
     });
 
-    //createWindow();
+    createWindow();
 
     setInterval(() => {
-        autoUpdater.checkForUpdates();
+        autoUpdater.checkForUpdatesAndNotify();
     }, 60*60*1000);
 
 });
+
+autoUpdater.on("update-downloaded", ()=>{
+    mainWindow.webContents.send("setUpdateAvalable", "true");
+})
 
 
 function launchVRMode() {
@@ -126,3 +153,15 @@ function launchDesktopMode() {
     exec(`"C:\Program Files (x86)\Steam\Steam.exe" -applaunch 438100 --no-vr`, ()=>{});
 }
 
+
+ipcMain.on("openDialogSelectDir", (e, arg)=>{
+    let path = dialog.showOpenDialogSync(null, {
+        properties: ['openDirectory'],
+        defaultPath: arg
+    });
+    e.returnValue = path[0];
+})
+
+ipcMain.on("log", (e, arg)=>{
+    console.log(arg);
+})

@@ -3,7 +3,7 @@ module.exports = class CacheModel{
         this.PicView = require("./PicView");
         this.Store = require("electron-store");
         this.cron = require("node-cron");
-        this.dialog = require("electron").remote.dialog;
+        this.ipcRenderer = require("electron").ipcRenderer;
         this.fs = require("fs-extra");
 
         this.View = new this.PicView(this);
@@ -30,11 +30,8 @@ module.exports = class CacheModel{
 
 
     onClickBuckupAddButton(){
-        let path = this.dialog.showOpenDialogSync(null, {
-            properties: ['openDirectory'],
-            defaultPath: '.'
-        });
-        this.addBuckupPath(path[0]);
+        let path = this.ipcRenderer.sendSync("openDialogSelectDir", ".");
+        this.addBuckupPath(path);
     }
 
     onClickBuckupDeleteButton(id){

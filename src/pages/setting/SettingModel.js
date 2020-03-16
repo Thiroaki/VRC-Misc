@@ -2,7 +2,7 @@ module.exports = class SettingModel{
     constructor(){
         this.Store = require("electron-store");
         this.SettingView = require("./SettingView");
-        this.dialog = require('electron').remote.dialog;
+        this.ipcRenderer = require('electron').ipcRenderer;
         this.View = new this.SettingView(this);
         this.store = new this.Store;
 
@@ -17,11 +17,8 @@ module.exports = class SettingModel{
     }
 
     onClickChangeVRCPath(){
-        let path = this.dialog.showOpenDialogSync(null, {
-            properties: ['openDirectory'],
-            defaultPath: '.'
-        });
-        this.updateVRCPath(path[0]);
+        let path = this.ipcRenderer.sendSync("openDialogSelectDir", "C:\\");
+        this.updateVRCPath(path);
     }
 
     updateVRCPath(newPath){

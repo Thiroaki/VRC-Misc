@@ -19,4 +19,8 @@ module.exports = class InfoView{
         $("#version").text(v);
     }
 
+    setUpdateAvalable(){
+        $("#can-update").show();
+    }
+
 }
