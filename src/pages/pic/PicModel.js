@@ -17,6 +17,8 @@ module.exports = class CacheModel{
         }else{
             this.store.set("picBuckupJobStatus", false);
         }
+
+        this.picFolder = process.env['USERPROFILE'] + "\\Pictures\\VRChat";
     }
 
 
@@ -123,14 +125,14 @@ module.exports = class CacheModel{
                 return;
             }
 
-            const userFolder = process.env['USERPROFILE'];
-            let picFolder = `${userFolder}\\Pictures\\VRChat`;
+            
             let buckupFolder = this.store.get("picBuckupFolder");
             let finishCount = 0;
 
             buckupFolder.forEach((e)=>{
-                this.fs.copy(picFolder, e, {overwrite:false,preserveTimestamps:true})
-                .then(()=>{ finishCount++ });
+                this.fs.copy(this.picFolder, e, {overwrite:false,preserveTimestamps:true})
+                .then(()=>{ finishCount++ })
+                .catch(()=>{ finishCount++ });
             });
 
             let finish = ()=>{
@@ -145,5 +147,9 @@ module.exports = class CacheModel{
             }
             finish();
         });
+    }
+
+    gatherPicture(){
+        
     }
 }

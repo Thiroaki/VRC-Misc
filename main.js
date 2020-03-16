@@ -16,6 +16,8 @@ app.setLoginItemSettings({
 
 //require("electron-reload")(__dirname);
 
+store.set("username", process.env['username']);
+
 //二重起動の防止
 const doubleboot = app.requestSingleInstanceLock();
 if(!doubleboot){
@@ -80,6 +82,13 @@ app.on('ready', ()=>{
         {label:"サウンドデバイス設定", click(menuItem){
             exec("C:/Windows/System32/mmsys.cpl",()=>{});
         }},
+        {type:"separator"},
+        {label:"VRモードで起動", click(){
+            launchVRMode();
+        }},
+        {label:"デスクトップモードで起動", click(){
+            launchDesktopMode();
+        }},
         {type:'separator'},
         {label:'終了',click(menuItem){
             forseQuit = true;
@@ -108,3 +117,12 @@ app.on('ready', ()=>{
     }, 60*60*1000);
 
 });
+
+
+function launchVRMode() {
+    exec(`"C:\Program Files (x86)\Steam\Steam.exe" -applaunch 438100`, ()=>{});
+}
+function launchDesktopMode() {
+    exec(`"C:\Program Files (x86)\Steam\Steam.exe" -applaunch 438100 --no-vr`, ()=>{});
+}
+
