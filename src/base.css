@@ -105,7 +105,7 @@ hr{
 /* === ボタンを表示するエリア ============================== */
 .switchArea {
     position       : relative; 
-    width          : 3rem;               /* ボタンの横幅       */
+    width          : 2.8rem;               /* ボタンの横幅       */
     background     : #fff;                /* デフォルト背景色   */
     border-radius: 1.5rem;
 }
@@ -145,6 +145,6 @@ hr{
 
 /* === 丸部分のSTYLE（ONのとき） =========================== */
 .switchArea input[type="checkbox"]:checked ~ #swImg {
-    transform      : translateX(1.5rem);    /* 丸も右へ移動       */
+    transform      : translateX(1.4rem);    /* 丸も右へ移動       */
     background     : #5eb05e;             /* カーソルタブの背景 */
 }

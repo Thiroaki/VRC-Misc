@@ -29,5 +29,9 @@ module.exports = class InfoModel{
             this.View.setUpdateAvalable();
         }
     }
+
+    updateQuit(){
+        this.ipcRenderer.send("updateQuit");
+    }
     
 }

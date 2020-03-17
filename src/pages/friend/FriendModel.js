@@ -26,9 +26,11 @@ module.exports = class FriendModel{
 
 
     onChangeLogParam(status, DCL, dir){
-        this.store.set("saveLogStatus", status);
-        this.store.set("saveLogDir", dir);
-        this.store.set("saveLogDCL", DCL);
+        if(status != undefined && DCL && dir){
+            this.store.set("saveLogStatus", status);
+            this.store.set("saveLogDir", dir);
+            this.store.set("saveLogDCL", DCL);
+        }
         if(status){
             this.vrcObserver.onExit(this.savePlaylog.bind(this));
         }else{
@@ -43,7 +45,7 @@ module.exports = class FriendModel{
         this.View.setSaveLogParam(status, dcl, dir);
     }
 
-    savePlaylog = async ()=>{
+    async savePlaylog(){
         const userName = this.store.get("username");
         const logFilePath = `C:/Users/${userName}/AppData/LocalLow/VRChat/VRChat`;
         const re = /output_log_(\d|-)*_(AM|PM)\.txt/;
@@ -80,7 +82,7 @@ module.exports = class FriendModel{
                 logId = parseInt(line.substr(0, 19).replace(/(\.|:|\s)/g, ""), 10);
                 
                 if(logId < this.store.get("lastLogId")){
-                    return;
+                    break;
                 }
                 if(re_friend.test(line)){
                     let date = line.substr(0, 19);     // {2020.03.07 23:42:00}
@@ -94,7 +96,7 @@ module.exports = class FriendModel{
                     let ymd = this.dateformat(logDate, "yyyy-mm-dd");
                     let fnametmp = `VRChat_playlog_${ymd}.txt`;
                     if(outFileName != fnametmp){
-                        this.fs.writeFile(this.path.join(outDir,outFileName), outText, ()=>{});
+                        this.fs.appendFile(this.path.join(outDir,outFileName), outText, ()=>{});
                         outFileName = fnametmp;
                         outText = `--\n${date} World: ${wname}\n`;
                     }else{
@@ -102,7 +104,7 @@ module.exports = class FriendModel{
                     }
                 }
             }
-            this.fs.writeFile(this.path.join(outDir,outFileName), outText, ()=>{});
+            this.fs.appendFile(this.path.join(outDir,outFileName), outText, ()=>{});
             this.store.set("lastLogId", logId);
         }
 

@@ -8,6 +8,7 @@ const {autoUpdater} = require("electron-updater");
 let store = new _Store();
 let mainWindow;
 let forseQuit = false;
+let notifyUpdate = false;
 
 app.setLoginItemSettings({
     openAtLogin: true,
@@ -91,10 +92,9 @@ app.on('ready', ()=>{
         }},
         {type:'separator'},
         {label:"アップデート確認", click(){
+            notifyUpdate = true;
             autoUpdater.checkForUpdatesAndNotify()
             .then((res)=>{
-                console.log(res.updateInfo);
-                console.log(res.versionInfo);
                 res.downloadPromise.then(()=>{
                     dialog.showMessageBox(
                         mainWindow,
@@ -104,12 +104,13 @@ app.on('ready', ()=>{
                             message: "新しいバージョンをダウンロードしました。再起動しますか？"
                         },
                         res => {
+                            notifyUpdate = false;
                             if (res === 0){
                                 autoUpdater.quitAndInstall()
                             }
                         }
                     )
-                });
+                })
             });
         }},
         {type:'separator'},
@@ -141,16 +142,29 @@ app.on('ready', ()=>{
 
 });
 
+autoUpdater.on("update-not-available", ()=>{
+    if(notifyUpdate){
+        dialog.showMessageBox(
+            mainWindow,
+            {
+                type: "info",
+                buttons: ["ok"],
+                message: "最新バージョンです。"
+            }
+        )
+        notifyUpdate = false;
+    }
+})
 autoUpdater.on("update-downloaded", ()=>{
     mainWindow.webContents.send("setUpdateAvalable", "true");
 })
 
 
 function launchVRMode() {
-    exec(`"C:\Program Files (x86)\Steam\Steam.exe" -applaunch 438100`, ()=>{});
+    exec(`"C:\\Program Files (x86)\\Steam\\Steam.exe" -applaunch 438100`, (err, out, stderr)=>{});
 }
 function launchDesktopMode() {
-    exec(`"C:\Program Files (x86)\Steam\Steam.exe" -applaunch 438100 --no-vr`, ()=>{});
+    exec(`"C:\\Program Files (x86)\\Steam\\Steam.exe" -applaunch 438100 --no-vr`, (err, out, stderr)=>{});
 }
 
 
@@ -159,9 +173,15 @@ ipcMain.on("openDialogSelectDir", (e, arg)=>{
         properties: ['openDirectory'],
         defaultPath: arg
     });
-    e.returnValue = path[0];
+    if(path){
+        e.returnValue = path[0];
+    }
 })
 
 ipcMain.on("log", (e, arg)=>{
     console.log(arg);
+})
+
+ipcMain.on("updateQuit", (e, arg)=>{
+    autoUpdater.quitAndInstall();
 })

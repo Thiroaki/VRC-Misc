@@ -8,10 +8,9 @@ module.exports = class InfoView{
     }
 
     setUiEvents(){
-        // vrcパス変更ボタン
-        $("#change-vrc-path").on("click", ()=>{
-            this.model.onClickChangeVRCPath();
-        });
+        $("#can-update .btn").on("click", ()=>{
+            this.model.updateQuit();
+        })
     }
 
 
