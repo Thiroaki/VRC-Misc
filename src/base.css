@@ -1,6 +1,7 @@
 html{
     height: 100%;
-    font-size: 16px;
+    font-size: 18px;
+    font-feature-settings: "palt";
 }
 body{
     margin:0;
@@ -12,8 +13,15 @@ html > span{
     color: hsl(0, 0%, 95%);
 }
 
+span{
+    user-select: none;
+}
+br{
+    user-select: none;
+}
+
 #side {
-    width: 192px;
+    width: 11rem;
     display: flex;
     flex-flow: column;
 }
@@ -49,15 +57,22 @@ html > span{
     justify-content: space-around;
 }
 
+.fa-side{
+    font-size: 30px;
+}
+
 .section-label{
     font-size: 1rem;
     font-weight: bold;
-    color: hsl(0, 0%, 98%);
+    color: hsl(0, 0%, 100%);
     margin-bottom: 1rem;
 }
-
+.section-item-label{
+    font-size: 0.7rem;
+    color: hsl(132, 2%, 60%);
+}
 .section-text{
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     color: hsl(0, 0%, 75%);
 }
 
@@ -90,7 +105,7 @@ hr{
 /* === ボタンを表示するエリア ============================== */
 .switchArea {
     position       : relative; 
-    width          : 3rem;               /* ボタンの横幅       */
+    width          : 2.8rem;               /* ボタンの横幅       */
     background     : #fff;                /* デフォルト背景色   */
     border-radius: 1.5rem;
 }
@@ -104,9 +119,9 @@ hr{
 .switchArea label {
     display        : block;               /* ボックス要素に変更 */
     box-sizing     : border-box;          /* 枠線を含んだサイズ */
-    height         : 1.5rem;                /* ボタンの高さ       */
+    height         : 1.35rem;                /* ボタンの高さ       */
     border         : 2px solid #8c8c8c;   /* 未選択タブのの枠線 */
-    border-radius  : 0.75rem;                /* 角丸               */
+    border-radius  : 0.675rem;                /* 角丸               */
     cursor: pointer;
 }
 
@@ -118,18 +133,18 @@ hr{
 /* === 丸部分のSTYLE（標準） =============================== */
 .switchArea #swImg {
     position       : absolute;            /* 親要素からの相対位置*/
-    width          : 1rem;                /* 丸の横幅           */
-    height         : 1rem;                /* 丸の高さ           */
+    width          : 0.9rem;                /* 丸の横幅           */
+    height         : 0.9rem;                /* 丸の高さ           */
     background     : #8c8c8c;             /* カーソルタブの背景 */
     top            : 4px;                 /* 親要素からの位置   */
     left           : 4px;                 /* 親要素からの位置   */
-    border-radius  : 0.5rem;                /* 角丸               */
+    border-radius  : 0.45rem;                /* 角丸               */
     transition     : .2s;                 /* 滑らか変化         */
     pointer-events: none;
 }
 
 /* === 丸部分のSTYLE（ONのとき） =========================== */
 .switchArea input[type="checkbox"]:checked ~ #swImg {
-    transform      : translateX(1.5rem);    /* 丸も右へ移動       */
+    transform      : translateX(1.4rem);    /* 丸も右へ移動       */
     background     : #5eb05e;             /* カーソルタブの背景 */
 }

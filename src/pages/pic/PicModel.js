@@ -3,7 +3,7 @@ module.exports = class CacheModel{
         this.PicView = require("./PicView");
         this.Store = require("electron-store");
         this.cron = require("node-cron");
-        this.dialog = require("electron").remote.dialog;
+        this.ipcRenderer = require("electron").ipcRenderer;
         this.fs = require("fs-extra");
 
         this.View = new this.PicView(this);
@@ -17,6 +17,8 @@ module.exports = class CacheModel{
         }else{
             this.store.set("picBuckupJobStatus", false);
         }
+
+        this.picFolder = process.env['USERPROFILE'] + "\\Pictures\\VRChat";
     }
 
 
@@ -28,11 +30,8 @@ module.exports = class CacheModel{
 
 
     onClickBuckupAddButton(){
-        let path = this.dialog.showOpenDialogSync(null, {
-            properties: ['openDirectory'],
-            defaultPath: '.'
-        });
-        this.addBuckupPath(path[0]);
+        let path = this.ipcRenderer.sendSync("openDialogSelectDir", ".");
+        this.addBuckupPath(path);
     }
 
     onClickBuckupDeleteButton(id){
@@ -123,14 +122,14 @@ module.exports = class CacheModel{
                 return;
             }
 
-            const userFolder = process.env['USERPROFILE'];
-            let picFolder = `${userFolder}\\Pictures\\VRChat`;
+            
             let buckupFolder = this.store.get("picBuckupFolder");
             let finishCount = 0;
 
             buckupFolder.forEach((e)=>{
-                this.fs.copy(picFolder, e, {overwrite:false,preserveTimestamps:true})
-                .then(()=>{ finishCount++ });
+                this.fs.copy(this.picFolder, e, {overwrite:false,preserveTimestamps:true})
+                .then(()=>{ finishCount++ })
+                .catch(()=>{ finishCount++ });
             });
 
             let finish = ()=>{
@@ -145,5 +144,9 @@ module.exports = class CacheModel{
             }
             finish();
         });
+    }
+
+    gatherPicture(){
+        
     }
 }

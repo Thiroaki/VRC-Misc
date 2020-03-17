@@ -7,6 +7,7 @@ module.exports = class YtdlModel{
         this.request = require("request");
         this.crypto = require('crypto');
         this.fs = require("fs");
+        //this.ipcRenderer = require("electron").ipcRenderer;
 
         this.View = new this.YtdlView(this);
         this.store = new this.Store();
@@ -140,18 +141,15 @@ module.exports = class YtdlModel{
         return new Promise((resolve, reject)=>{
             //リモート
             const ytdlUrl = "https://api.github.com/repos/ytdl-org/youtube-dl/releases/latest";
-            $.getJSON(ytdlUrl, (json)=>{
-                if(json.message)
-                    this.remoteVersion = json.tag_name;
-                    this.RemoteDownloadUrl = `https://github.com/ytdl-org/youtube-dl/releases/download/${json.tag_name}/youtube-dl.exe`;
-                    this.ChecksumDownloadUrl = `https://github.com/ytdl-org/youtube-dl/releases/download/${json.tag_name}/MD5SUMS`;
-                    
-                    this.store.set("remoteVer", json.tag_name);
-                    this.store.set("remoteDlUrl", this.RemoteDownloadUrl);
-                    this.store.set("chsumDlUrl", this.ChecksumDownloadUrl);
-
-            }).fail((jqXHR, textStatus, errorThrown)=>{
-                reject("remote check error " + jqXHR.status);
+            this.request({method:"get", url:ytdlUrl, json:true, headers:{'User-Agent':'VRC-Misc'}}, (err, res, json)=>{
+                if (err) reject("remote check error " + jqXHR.status);                
+                this.remoteVersion = json.tag_name;
+                this.RemoteDownloadUrl = `https://github.com/ytdl-org/youtube-dl/releases/download/${json.tag_name}/youtube-dl.exe`;
+                this.ChecksumDownloadUrl = `https://github.com/ytdl-org/youtube-dl/releases/download/${json.tag_name}/MD5SUMS`;
+                
+                this.store.set("remoteVer", json.tag_name);
+                this.store.set("remoteDlUrl", this.RemoteDownloadUrl);
+                this.store.set("chsumDlUrl", this.ChecksumDownloadUrl);
             });
             //ローカル
             let vrcPath = this.store.get("vrcPath");

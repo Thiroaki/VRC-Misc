@@ -1,0 +1,60 @@
+<div class="main-content">
+    <div class="container my-4 p-0">
+        <div class="section-label">
+            <span>プレイログ</span>
+        </div>
+        
+        <div id="save-log" class="bg-b2">
+            <div class="mb-2">
+                <div class="row m-0 d-flex align-items-center">
+                    <div class="col px-0">
+                        <span class="text">プレイログを保存する</span>
+                    </div>
+                    <div class="col-1 px-0" style="height: 1.5rem;">
+                        <div id="log-switch" class="switchArea">
+                            <input type="checkbox" id="switch1">
+                            <label for="switch1"></label>
+                            <div id="swImg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-text">
+                    <span>VRChatを終了した時に、訪れたワールドと一緒に居たプレイヤーの名前を保存します。<br>指定したフォルダに日付毎にファイルを作成し、<b>日付変更線より前に入ったワールド</b>でのログが同じファイルに保存されます。</span>
+                </div>
+            </div>
+            
+            <div id="job-param" class="text row m-0 mb-2 d-flex align-items-end">
+                <div class="col-2 px-0 mr-2">
+                    <div class="section-item-label mb-1 font-weight-bold">
+                        <span>日付変更線</span>
+                    </div>
+                    <select id="log-dcl" class="form-control">
+                        <option value="0">0時</option>
+                        <option value="1">1時</option>
+                        <option value="2">2時</option>
+                        <option value="3">3時</option>
+                        <option value="4">4時</option>
+                        <option value="5">5時</option>
+                        <option value="6">6時</option>
+                        <option value="7">7時</option>
+                        <option value="8">8時</option>
+                        <option value="9">9時</option>
+                    </select>
+                </div>
+                <div class="col px-0 mr-2">
+                    <div class="section-item-label mb-1 font-weight-bold">
+                        <span>保存先</span>
+                    </div>
+                    <div class="px-2 bg-b4 mcard path-box d-flex align-items-center">
+                        <span id="log-save-dir"></span>
+                    </div>
+                </div>
+                <div class="">
+                    <button id="change-log-save-dir" class="btn btn-light" style="float: right;width: 4rem;">参照</button>
+                
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>

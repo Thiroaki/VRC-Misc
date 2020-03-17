@@ -1,4 +1,4 @@
-const { app, Menu, Tray, BrowserWindow, ipcMain } = require('electron');
+const { app, Menu, Tray, BrowserWindow, ipcMain, dialog } = require('electron');
 const fs = require("fs");
 const path = require('path');
 const exec = require('child_process').exec;
@@ -8,6 +8,7 @@ const {autoUpdater} = require("electron-updater");
 let store = new _Store();
 let mainWindow;
 let forseQuit = false;
+let notifyUpdate = false;
 
 app.setLoginItemSettings({
     openAtLogin: true,
@@ -15,6 +16,8 @@ app.setLoginItemSettings({
 });
 
 //require("electron-reload")(__dirname);
+
+store.set("username", process.env['username']);
 
 //二重起動の防止
 const doubleboot = app.requestSingleInstanceLock();
@@ -80,6 +83,36 @@ app.on('ready', ()=>{
         {label:"サウンドデバイス設定", click(menuItem){
             exec("C:/Windows/System32/mmsys.cpl",()=>{});
         }},
+        {type:"separator"},
+        {label:"VRモードで起動", click(){
+            launchVRMode();
+        }},
+        {label:"デスクトップモードで起動", click(){
+            launchDesktopMode();
+        }},
+        {type:'separator'},
+        {label:"アップデート確認", click(){
+            notifyUpdate = true;
+            autoUpdater.checkForUpdatesAndNotify()
+            .then((res)=>{
+                res.downloadPromise.then(()=>{
+                    dialog.showMessageBox(
+                        mainWindow,
+                        {
+                            type: "info",
+                            buttons: ["No", "Yes"],
+                            message: "新しいバージョンをダウンロードしました。再起動しますか？"
+                        },
+                        res => {
+                            notifyUpdate = false;
+                            if (res === 0){
+                                autoUpdater.quitAndInstall()
+                            }
+                        }
+                    )
+                })
+            });
+        }},
         {type:'separator'},
         {label:'終了',click(menuItem){
             forseQuit = true;
@@ -101,10 +134,54 @@ app.on('ready', ()=>{
         createWindow();
     });
 
-    //createWindow();
+    createWindow();
 
     setInterval(() => {
-        autoUpdater.checkForUpdates();
+        autoUpdater.checkForUpdatesAndNotify();
     }, 60*60*1000);
 
 });
+
+autoUpdater.on("update-not-available", ()=>{
+    if(notifyUpdate){
+        dialog.showMessageBox(
+            mainWindow,
+            {
+                type: "info",
+                buttons: ["ok"],
+                message: "最新バージョンです。"
+            }
+        )
+        notifyUpdate = false;
+    }
+})
+autoUpdater.on("update-downloaded", ()=>{
+    mainWindow.webContents.send("setUpdateAvalable", "true");
+})
+
+
+function launchVRMode() {
+    exec(`"C:\\Program Files (x86)\\Steam\\Steam.exe" -applaunch 438100`, (err, out, stderr)=>{});
+}
+function launchDesktopMode() {
+    exec(`"C:\\Program Files (x86)\\Steam\\Steam.exe" -applaunch 438100 --no-vr`, (err, out, stderr)=>{});
+}
+
+
+ipcMain.on("openDialogSelectDir", (e, arg)=>{
+    let path = dialog.showOpenDialogSync(null, {
+        properties: ['openDirectory'],
+        defaultPath: arg
+    });
+    if(path){
+        e.returnValue = path[0];
+    }
+})
+
+ipcMain.on("log", (e, arg)=>{
+    console.log(arg);
+})
+
+ipcMain.on("updateQuit", (e, arg)=>{
+    autoUpdater.quitAndInstall();
+})

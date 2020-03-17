@@ -27,6 +27,17 @@
     line-height: 0px;
     border-radius: 3px;
     padding: 0rem 0.5rem;
+    /* color: white;
+    background-color: hsl(0, 0%, 35%); */
+}
+
+.path-box{
+    height: 2rem;
+    font-size: 0.9rem;
+}
+.path-box > *{
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 #bkup-folder > div{
