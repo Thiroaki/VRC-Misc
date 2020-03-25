@@ -51,8 +51,8 @@ module.exports = class YtdlModel{
             this.UpdateLocked = true;
             this.View.setUpdateButtonDisable();
 
-            await this.checkYtdlVersion();
-            await this.updateYtdl();
+            await this.checkYtdlVersion().catch((r)=>{console.log(r)});
+            await this.updateYtdl().catch((r)=>{console.log(r)});
 
             setTimeout(() => {
                 this.updateVersionInfo();
@@ -111,7 +111,7 @@ module.exports = class YtdlModel{
     updateYtdl(){
         return new Promise((resolve, reject)=>{
             if (this.store.get("remoteVer") == this.store.get("localVer")){
-                return;
+                return resolve("ytdl is already latest");
             }
             
             let ytdl_path = this.store.get("vrcPath") + `\\VRChat_Data\\StreamingAssets\\youtube-dl.exe`;
@@ -119,19 +119,20 @@ module.exports = class YtdlModel{
             let checksum;
             //チェックサム検証
             this.request({method:"get", url:this.ChecksumDownloadUrl}, (err,res,body)=>{
-                if(err) reject("fail checksum download");
+                if(err) {return reject("fail checksum download")};
 
                 checksum = body.match(/(\w|\d){30,}/g)[1];
                 this.request({method:"get", url:this.RemoteDownloadUrl, encoding:null}, (err, res, body)=>{
-                    if (err) reject("fail exe download");
+                    if (err) {return reject("fail exe download")};
                     
                     //リネームバックアップして保存
                     if(checksum == this.md5hex(body)){
                         this.fs.renameSync(ytdl_path, bkup_path);
                         this.fs.writeFileSync(ytdl_path, body, "binary");
                         this.localVersion = this.remoteVersion;
+                        this.store.set("localVer", this.localVersion);
                     }
-                    resolve("update done");
+                    return resolve("update done");
                 });
             });
         });
@@ -140,9 +141,10 @@ module.exports = class YtdlModel{
     checkYtdlVersion(){
         return new Promise((resolve, reject)=>{
             //リモート
-            const ytdlUrl = "https://api.github.com/repos/ytdl-org/youtube-dl/releases/latest";
+            const ytdlUrl = "https://api.github.com/repos/ytdl-org/youtube-dldhhsdf/releases/latest";
             this.request({method:"get", url:ytdlUrl, json:true, headers:{'User-Agent':'VRC-Misc'}}, (err, res, json)=>{
-                if (err) reject("remote check error " + jqXHR.status);                
+                if (err) { return reject("remote check error " + jqXHR.status)};
+                
                 this.remoteVersion = json.tag_name;
                 this.RemoteDownloadUrl = `https://github.com/ytdl-org/youtube-dl/releases/download/${json.tag_name}/youtube-dl.exe`;
                 this.ChecksumDownloadUrl = `https://github.com/ytdl-org/youtube-dl/releases/download/${json.tag_name}/MD5SUMS`;
@@ -159,9 +161,9 @@ module.exports = class YtdlModel{
                 this.localVersion = out.replace(/\r?\n/g, '');;
                 this.store.set("localVer", this.localVersion);
                 if(err){
-                    reject("local check error");
+                    return reject("local check error");
                 }else{
-                    resolve("version check done");
+                    return resolve("version check done");
                 }
             });
         });

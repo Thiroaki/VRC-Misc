@@ -118,8 +118,7 @@ module.exports = class CacheModel{
             console.log("bkup start");
             
             if(this.store.get("picBuckupFolder") == undefined){
-                reject("Folder not set")
-                return;
+                return reject("Folder not set");
             }
 
             
@@ -136,7 +135,7 @@ module.exports = class CacheModel{
                 setTimeout(() => {
                     if(finishCount += buckupFolder.length){
                         console.log("bkup finish");
-                        resolve("bkup finish");
+                        return resolve("bkup finish");
                     }else{
                         finish();
                     }
