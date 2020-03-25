@@ -121,7 +121,7 @@ module.exports = class YtdlModel{
             this.request({method:"get", url:this.ChecksumDownloadUrl}, (err,res,body)=>{
                 if(err) {return reject("fail checksum download")};
 
-                checksum = body.match(/(\w|\d){30,}/g)[1];
+                checksum = body.match(/\w+(?=\s+youtube-dl.exe)/g)[0];
                 this.request({method:"get", url:this.RemoteDownloadUrl, encoding:null}, (err, res, body)=>{
                     if (err) {return reject("fail exe download")};
                     
@@ -141,7 +141,7 @@ module.exports = class YtdlModel{
     checkYtdlVersion(){
         return new Promise((resolve, reject)=>{
             //リモート
-            const ytdlUrl = "https://api.github.com/repos/ytdl-org/youtube-dldhhsdf/releases/latest";
+            const ytdlUrl = "https://api.github.com/repos/ytdl-org/youtube-dl/releases/latest";
             this.request({method:"get", url:ytdlUrl, json:true, headers:{'User-Agent':'VRC-Misc'}}, (err, res, json)=>{
                 if (err) { return reject("remote check error " + jqXHR.status)};
                 
