@@ -100,14 +100,12 @@ app.on('ready', ()=>{
                         mainWindow,
                         {
                             type: "info",
-                            buttons: ["No", "Yes"],
-                            message: "新しいバージョンをダウンロードしました。再起動しますか？"
+                            buttons: ["OK"],
+                            message: "新しいバージョンをダウンロードしました。再起動してください。"
                         },
-                        res => {
+                        () => {
                             notifyUpdate = false;
-                            if (res === 0){
-                                autoUpdater.quitAndInstall()
-                            }
+                            autoUpdater.quitAndInstall();
                         }
                     )
                 })
