@@ -7,10 +7,11 @@ module.exports = class YtdlModel{
         this.request = require("request");
         this.crypto = require('crypto');
         this.fs = require("fs");
-        //this.ipcRenderer = require("electron").ipcRenderer;
+        this._mlogger = require("../../module/mlogger/index");
 
         this.View = new this.YtdlView(this);
         this.store = new this.Store();
+        this.logger = new this._mlogger("ytdl");
 
         this.remoteVersion = "";
         this.localVersion = "";
@@ -54,8 +55,8 @@ module.exports = class YtdlModel{
             this.UpdateLocked = true;
             this.View.setUpdateButtonDisable();
 
-            await this.checkYtdlVersion().catch((r)=>{console.log(r)});
-            await this.updateYtdl().catch((r)=>{console.log(r)});
+            await this.checkYtdlVersion();
+            await this.updateYtdl();
 
             setTimeout(() => {
                 this.updateVersionInfo();
@@ -90,14 +91,14 @@ module.exports = class YtdlModel{
             await this.updateYtdl();
         });
         this.updateJob.start();
-        console.log("Job started", month, hour);
+        this.logger.info("Job started", month, hour);
     }
     destroyJob(){
         this.ytdlJob.status = false;
         this.store.set("ytdlJob", this.ytdlJob);
         if(this.updateJob != undefined){
             this.updateJob.destroy();
-            console.log("Job deleted");
+            this.logger.info("Job deleted");
         }        
     }
 
@@ -146,8 +147,11 @@ module.exports = class YtdlModel{
             //リモート
             const ytdlUrl = "https://api.github.com/repos/ytdl-org/youtube-dl/releases/latest";
             this.request({method:"get", url:ytdlUrl, json:true, headers:{'User-Agent':'VRC-Misc'}}, (err, res, json)=>{
-                if (err) { return reject("remote check error " + jqXHR.status)};
-                
+                if (err) {
+                    this.logger.error("remote version check fail\n" + jqXHR.status);
+                    return reject();
+                }
+
                 this.remoteVersion = json.tag_name;
                 this.RemoteDownloadUrl = `https://github.com/ytdl-org/youtube-dl/releases/download/${json.tag_name}/youtube-dl.exe`;
                 this.ChecksumDownloadUrl = `https://github.com/ytdl-org/youtube-dl/releases/download/${json.tag_name}/MD5SUMS`;
@@ -164,8 +168,10 @@ module.exports = class YtdlModel{
                 this.localVersion = out.replace(/\r?\n/g, '');;
                 this.store.set("localVer", this.localVersion);
                 if(err){
+                    this.logger.error("local version check error\n" + err);
                     return reject("local check error");
                 }else{
+                    this.logger.info("version check done");
                     return resolve("version check done");
                 }
             });

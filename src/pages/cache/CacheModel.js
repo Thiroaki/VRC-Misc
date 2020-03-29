@@ -6,12 +6,14 @@ module.exports = class CacheModel{
         this.cron = require("node-cron");
         this.fs = require("fs");
         this.path = require("path");
+        this._mlogger = require("../../module/mlogger/index");
+
         this.View = new this.CacheView(this);
         this.store = new this.Store();
+        this.logger = new this._mlogger("cache");
         
         this.CacheFileStats = {count:0,size:0};
         this.CacheFiles = [];
-        this.ClearLocked = false;
 
         this.clearJob;
 
@@ -41,20 +43,16 @@ module.exports = class CacheModel{
     }
 
     onClearButtonPress(limit) {
-        if(!this.ClearLocked){
-            this.ClearLocked = true;
-            this.View.setClearButtonDisable();
-            setTimeout(()=>{
-                this.clearCache(limit);
-                this.loadCacheStatus();
-                this.updateCacheInfo();
-                this.View.setClearButtonEnable();
-                this.ClearLocked = false;
-            }, 200);
-        }
+        this.View.setClearButtonDisable();
+        setTimeout(()=>{
+            this.clearCache(limit);
+            this.loadCacheStatus();
+            this.updateCacheInfo();
+            this.View.setClearButtonEnable();
+        }, 200);
     }
 
-    onRegist(status, month, hour, limit){
+    onChangeClearJobParam(status, month, hour, limit){
         if(status){
             this.createJob(month, hour, limit);
         }else{
@@ -79,14 +77,14 @@ module.exports = class CacheModel{
             this.clearCache(limit);
         });
         this.clearJob.start();
-        console.log("Job started", month, hour, limit);
+        this.logger.info("Job started", month, hour, limit);
     }
     destroyJob(){
         this.cacheJob.status = false
         this.store.set("cacheJob", this.cacheJob);
         if(this.clearJob != undefined){
             this.clearJob.destroy();
-            console.log("Job deleted");
+            this.logger.info("Job deleted");
         }
     }
 
@@ -101,13 +99,13 @@ module.exports = class CacheModel{
 
         for(let i=0; i < this.CacheFiles.length; i++){
             let file = this.CacheFiles[i];
-            let distDays = (nowDate - file.atime) / 86400000;
+            let distDays = (nowDate - file.atime) / 24 * 60*60*1000;
             if (distDays > limit) {
                 this.fs.unlink(file.name, (err)=>{});
                 cnt++;
             }
         }
-        console.log(cnt + " files cleared!");
+        this.logger.info(cnt + " files cleared");
         
     }
 
@@ -124,7 +122,6 @@ module.exports = class CacheModel{
         }
 
         this.View.setCacheInfo(count, dispSize);
-        console.log("Update!");
         
     }
 
@@ -155,14 +152,14 @@ module.exports = class CacheModel{
                         }
                     }
                 }catch (e){
-                    console.log(e);
+                    this.logger.warn("cache load stumbled\n" + e);
                 }
             }
         }
 
         this.CacheFileStats.count = totalCount;
         this.CacheFileStats.size = totalSize;
-        console.log("Load Finish");
+        this.logger.info("cache load Finish");
         
     }
 }

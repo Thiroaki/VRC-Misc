@@ -7,10 +7,12 @@ module.exports = class FriendModel{
         this.path = require("path");
         this.readline = require("readline");
         this.dateformat = require("dateformat");
+        this._mlogger = require("../../module/mlogger/index");
 
         this.View = new this._View(this);
         this.store = new this._Store();
         this.vrcObserver = new this._vrcObs();
+        this.logger = new this._mlogger("friend");
 
         if(this.store.get("saveLogStatus") != undefined && this.store.get("saveLogStatus")){
             // vrc終了時にsavePlaylog();
@@ -26,7 +28,7 @@ module.exports = class FriendModel{
 
 
     onChangeLogParam(status, DCL, dir){
-        console.log(status, DCL, dir);
+        this.logger.info("save log param change:", status, dcl, dir);
         if(status != undefined && DCL && dir){
             this.store.set("saveLogStatus", status);
             this.store.set("saveLogDir", dir);
@@ -44,6 +46,7 @@ module.exports = class FriendModel{
         let dcl = this.store.get("saveLogDCL");
         let dir = this.store.get("saveLogDir");
         this.View.setSaveLogParam(status, dcl, dir);
+        this.logger.info("save log param set:", status, dcl, dir);
     }
 
     async savePlaylog(){

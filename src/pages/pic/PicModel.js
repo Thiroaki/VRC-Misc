@@ -8,18 +8,20 @@ module.exports = class CacheModel{
         this.path = require("path");
         this.chokidar = require("chokidar");
         this.dateformat = require("dateformat");
+        this._mlogger = require("../../module/mlogger/index");
 
         this.View = new this.PicView(this);
         this.store = new this.Store();
+        this.logger = new this._mlogger("pic");
         
         this.bkupDeleteLock = true;
-        this.picBuckupJob;
+        this.picBackupJob;
         this.watcher;
         
-        // if(this.store.get("picBuckupJobStatus") != undefined && this.store.get("picBuckupJobStatus")){
-        //     this.createJob(this.store.get("picBuckupJobText"), this.store.get("picBuckupJobLimit"));
+        // if(this.store.get("picBackupJobStatus") != undefined && this.store.get("picBackupJobStatus")){
+        //     this.createJob(this.store.get("picBackupJobText"), this.store.get("picBackupJobLimit"));
         // }else{
-        //     this.store.set("picBuckupJobStatus", false);
+        //     this.store.set("picBackupJobStatus", false);
         // }
 
         if(this.store.get("picSortStatus") != undefined && this.store.get("picSortStatus")){
@@ -33,45 +35,43 @@ module.exports = class CacheModel{
     onSelect(){
         this.View.setView({userFolder:process.env["userprofile"]});
         this.View.setUiEvents();
-        this.setBuckupParam();
-        this.setSortInfo();
+        this.setBackupParam();
+        this.setSortParam();
     }
 
 
-    onClickBuckupAddButton(){
+    onClickBackupAddButton(){
         let path = this.ipcRenderer.sendSync("openDialogSelectDir", "C:\\");
-        if(path) this.addBuckupPath(path);
+        if(path) this.addBackupPath(path);
     }
 
-    onClickBuckupDeleteButton(id){
+    onClickBackupDeleteButton(id){
         if(this.bkupDeleteLock){
             this.bkupDeleteLock = false;
-            let folder = this.store.get("picBuckupSrcPath");
+            let folder = this.store.get("picBackupSrcPath");
             folder.splice(id, 1);
-            this.store.set("picBuckupSrcPath", folder);
+            this.store.set("picBackupSrcPath", folder);
             this.bkupDeleteLock = true;
-            console.log(folder);
         }
     }
 
-    onChangeBuckupDistPath(path){
-        this.store.set("picBuckupDistPath", path);
+    onChangeBackupDistPath(path){
+        this.store.set("picBackupDistPath", path);
     }
 
-    onChangeBuckupKeep(bool){
-        this.store.set("picBuckupKeep", bool);
-        console.log(bool);
+    onChangeBackupKeep(bool){
+        this.store.set("picBackupKeep", bool);
+        this.logger.debug(bool);
         
     }
 
 
     onChangeSortParam(status, DCL, dir){
+        this.logger.info("sort param change:", status, DCL, dir);
         if(DCL && dir != undefined){
             this.store.set("picSortStatus", status);
             this.store.set("picSortDCL", DCL);
             this.store.set("picSortDir", dir);
-            console.log(status, DCL, dir);
-            
         }
         if(status && dir){
             this.setSortJob();
@@ -86,112 +86,116 @@ module.exports = class CacheModel{
 
 
 
-    async onClickBuckupButton(){
+    async onClickBackupButton(){
         this.View.setBkupButtonDisable();
-        await this.buckupPicture()
-        .then((v)=>{ console.log(v) })
-        .catch((v)=>{ console.log(v) });
+        await this.backupPicture();
         this.View.setBkupButtonEnable();
     }
 
 
-    setBuckupParam(){
-        let srcPaths = this.store.get("picBuckupSrcPath");
-        let distPath = this.store.get("picBuckupDistPath");
-        let keep = this.store.get("picBuckupKeep");
+    setBackupParam(){
+        let srcPaths = this.store.get("picBackupSrcPath");
+        let distPath = this.store.get("picBackupDistPath");
+        let keep = this.store.get("picBackupKeep");
         if(!srcPaths) srcPaths = [];
         if(!distPath) distPath = "";
-        this.View.setBuckupParam(srcPaths, distPath, keep);
+        this.View.setBackupParam(srcPaths, distPath, keep);
+        this.logger.info("backup param:", srcPaths, distPath, keep);
     }
 
-    setSortInfo(){
+    setSortParam(){
         let status = this.store.get("picSortStatus");
         let dcl = this.store.get("picSortDCL");
         let dir = this.store.get("picSortDir");
         this.View.setPicSortParam(status, dcl, dir);
+        this.logger.info("sort param set:", status, DCL, dir);
     }
 
-    addBuckupPath(fpath){
+    addBackupPath(fpath){
         let bkupFolder;
         if(this.fs.statSync(fpath).isDirectory()){
-            if(this.store.get("picBuckupSrcPath") == undefined){
+            if(this.store.get("picBackupSrcPath") == undefined){
                 bkupFolder = [fpath];
-                this.store.set("picBuckupSrcPath", bkupFolder);
+                this.store.set("picBackupSrcPath", bkupFolder);
             }else{
-                bkupFolder = this.store.get("picBuckupSrcPath");
-                this.store.set("picBuckupSrcPath", bkupFolder.concat([fpath]));
+                bkupFolder = this.store.get("picBackupSrcPath");
+                this.store.set("picBackupSrcPath", bkupFolder.concat([fpath]));
             }
             
         }
-        this.setBuckupParam();
+        this.setBackupParam();
     }
 
 
     createJob(cronText){
-        this.store.set("picBuckupJobText", cronText);
-        this.store.set("picBuckupJobStatus", true);
+        this.store.set("picBackupJobText", cronText);
+        this.store.set("picBackupJobStatus", true);
 
-        if(this.picBuckupJob != undefined){
-            this.picBuckupJob.destroy();
+        if(this.picBackupJob != undefined){
+            this.picBackupJob.destroy();
         }
-        this.picBuckupJob = this.cron.schedule(cronText, ()=>{
-            this.buckupPicture();
+        this.picBackupJob = this.cron.schedule(cronText, ()=>{
+            this.backupPicture();
         });
-        this.picBuckupJob.start();
-        console.log("Job started");
+        this.picBackupJob.start();
+        this.logger.debug("Job started");
     }
     destroyJob(){
-        this.store.set("picBuckupJobStatus", false);
-        if(this.picBuckupJob != undefined){
-            this.picBuckupJob.destroy();
+        this.store.set("picBackupJobStatus", false);
+        if(this.picBackupJob != undefined){
+            this.picBackupJob.destroy();
         }
-        console.log("Job deleted");
+        this.logger.debug("Job deleted");
     }
 
     setJobInfo(){
-        let jobStatus = this.store.get("picBuckupJobStatus");
-        let span = this.store.get("picBuckupJobText");
-        let limit = this.store.get("picBuckupJobPath");
+        let jobStatus = this.store.get("picBackupJobStatus");
+        let span = this.store.get("picBackupJobText");
+        let limit = this.store.get("picBackupJobPath");
         if(span && limit){
             this.View.setJobInfo(jobStatus, span, limit);
         }
     }
 
-    buckupPicture(){
+    backupPicture(){
         return new Promise((resolve, reject) =>{
-            console.log("bkup start");
-            let buckupSrcFolder = this.store.get("picBuckupSrcPath");
-            let distFolder = this.store.get("picBuckupDistPath");
-            if(buckupSrcFolder == undefined || distFolder == undefined){
-                console.log("folder is not set");
-                
+            this.logger.info("Picture backup start");
+            let backupSrcFolder = this.store.get("picBackupSrcPath");
+            let distFolder = this.store.get("picBackupDistPath");
+            let isKeep = this.store.get("picBackupKeep");
+            this.logger.info(backupSrcFolder, distFolder, isKeep);
+
+            if(backupSrcFolder == undefined || distFolder == undefined){
+                this.logger.error("folder wasn't set");
                 return reject("Folder not set");
             }
 
             let promiseArr = [];
-            for (const folder of buckupSrcFolder){
+            for (const folder of backupSrcFolder){
                 let bkup = (src)=>{
                     return new Promise((resolve,reject)=>{
                         let dist = distFolder;
-                        if(this.store.get("picBuckupKeep")){
+                        if(isKeep){
                             dist = this.path.join(distFolder, this.path.basename(src));
                         }
                         this.fs.copy(src, dist, {overwrite:false,preserveTimestamps:true})
                         .then(()=>{
-                            console.log("bkup folder ok");
-                            
+                            this.logger.debug("bkup folder ok");
                             resolve()})
-                        .catch(()=>{
-                            reject("buckup copy faild");
+                        .catch((err)=>{
+                            this.logger.error(err);
+                            reject("backup copy faild");
                         });
                     });
                 };
                 promiseArr.push(bkup(folder));
             }
             Promise.all(promiseArr).then(()=>{
-                resolve("buckup finished");
+                this.logger.info("Backup finish");
+                resolve("backup finished");
             }).catch(()=>{
-                reject("buckup error");
+                this.logger.error("Backup error");
+                reject("backup error");
             });
         });
     }
@@ -205,9 +209,9 @@ module.exports = class CacheModel{
             d.setHours(d.getHours() - DCL);
             let dirname = this.dateformat(d, 'yyyy-mm-dd');
             this.fs.move(file, this.path.join(this.path.dirname(file), dirname, this.path.basename(file)), err=>{
-                if (err) console.log(err);
+                if (err) this.logger.error(err);
             });
-            console.log(this.path.dirname(file), dirname, this.path.basename(file));
+            this.logger.debug(this.path.dirname(file), dirname, this.path.basename(file));
         }
     }
 

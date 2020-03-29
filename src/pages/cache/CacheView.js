@@ -34,7 +34,7 @@ module.exports = class CacheView{
         let limit = $('#job-limit').val();
         let month = $('#job-month').val();
         let hour = $('#job-hour').val();
-        this.model.onRegist(status, month, hour, limit);
+        this.model.onChangeClearJobParam(status, month, hour, limit);
     }
 
 

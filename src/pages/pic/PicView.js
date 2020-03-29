@@ -10,21 +10,21 @@ module.exports = class CacheView{
 
     setUiEvents(){
         $("#bkup-path-add").on("click", ()=>{
-            this.Model.onClickBuckupAddButton();
+            this.Model.onClickBackupAddButton();
         });
         $("#pic-bkup").on("click", ()=>{
-            this.Model.onClickBuckupButton();
+            this.Model.onClickBackupButton();
         });
         $("#change-bkup-dist-path").on("click", ()=>{
             let path = this.ipcRenderer.sendSync("openDialogSelectDir", "C:\\");
             if(path){
                 $("#bkup-dist-path").text(path);
-                this.Model.onChangeBuckupDistPath(path);
+                this.Model.onChangeBackupDistPath(path);
             }
         });
         $("#bkup-keep-switch").on("change", ()=>{
             let bool = $("#bkup-keep-switch input[type='checkbox']").prop("checked");
-            this.Model.onChangeBuckupKeep(bool);
+            this.Model.onChangeBackupKeep(bool);
         });
 
 
@@ -48,7 +48,7 @@ module.exports = class CacheView{
     }
 
 
-    setBuckupParam(srcPaths, distPath, keep){
+    setBackupParam(srcPaths, distPath, keep){
         $("#bkup-folder").empty();
         for(let i=0; i<srcPaths.length; i++){
             let div = `
@@ -60,7 +60,7 @@ module.exports = class CacheView{
             $("#bkup-folder").append(div);
         }
         $(".bkup-del").on("click", (e)=>{
-            this.Model.onClickBuckupDeleteButton(e.target.id);
+            this.Model.onClickBackupDeleteButton(e.target.id);
             $("#bkup-src-path-"+e.target.id).remove();
         });
         $("#bkup-dist-path").text(distPath);
