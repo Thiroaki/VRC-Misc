@@ -1,4 +1,4 @@
-const debug_mode = true;
+const debug_mode = false;
 
 const { app, Menu, Tray, BrowserWindow, ipcMain, dialog } = require('electron');
 const fs = require("fs");
@@ -6,11 +6,19 @@ const path = require('path');
 const exec = require('child_process').exec;
 const _Store = require("electron-store");
 const {autoUpdater} = require("electron-updater");
+const _mlogger = require("./src/module/mlogger/index");
 
 let store = new _Store();
 let mainWindow;
 let forseQuit = false;
 let notifyUpdate = false;
+let logger = new _mlogger("system");
+
+//二重起動の防止
+const doubleboot = app.requestSingleInstanceLock();
+if(!doubleboot){
+    app.quit();
+}
 
 if(debug_mode){
     //require("electron-reload")(__dirname);
@@ -23,11 +31,7 @@ if(debug_mode){
 
 store.set("username", process.env['username']);
 
-//二重起動の防止
-const doubleboot = app.requestSingleInstanceLock();
-if(!doubleboot){
-    app.quit();
-}
+logger.debug("App Launch");
 
 function createWindow() {
     if(mainWindow && !mainWindow.isDestroyed()){
@@ -97,6 +101,7 @@ app.on('ready', ()=>{
         {type:'separator'},
         {label:"アップデート確認", click(){
             notifyUpdate = true;
+            logger.info("Check for update in manual");
             autoUpdater.checkForUpdatesAndNotify()
             .then((res)=>{
                 res.downloadPromise.then(()=>{
@@ -139,6 +144,7 @@ app.on('ready', ()=>{
     createWindow();
 
     setInterval(() => {
+        logger.info("Check for update in auto");
         autoUpdater.checkForUpdatesAndNotify();
     }, 60*60*1000);
 
@@ -158,6 +164,7 @@ autoUpdater.on("update-not-available", ()=>{
     }
 })
 autoUpdater.on("update-downloaded", ()=>{
+    logger.info("Update avalable");
     mainWindow.webContents.send("setUpdateAvalable", "true");
 })
 

@@ -1,12 +1,13 @@
 {
     "appenders": {
-        "out":{ "type": "stdout" },
-        "file":{ "type": "file", "filename": "system.log", "maxLogSize": 100000 }
+        "console": { "type": "stdout" },
+        "file_raw": { "type": "file", "filename": "system.log", "maxLogSize": 100000 },
+        "file": { "type": "logLevelFilter", "appender": "file_raw", "level":"info" }
     },
     "categories":{
         "default":{
-            "appenders":["out", "file"],
-            "level": "info"
+            "appenders":["console", "file"],
+            "level": "all"
         }
     }
 }

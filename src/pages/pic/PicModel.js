@@ -100,7 +100,7 @@ module.exports = class CacheModel{
         if(!srcPaths) srcPaths = [];
         if(!distPath) distPath = "";
         this.View.setBackupParam(srcPaths, distPath, keep);
-        this.logger.info("backup param:", srcPaths, distPath, keep);
+        this.logger.info("backup param set:", srcPaths, distPath, keep);
     }
 
     setSortParam(){
@@ -108,7 +108,7 @@ module.exports = class CacheModel{
         let dcl = this.store.get("picSortDCL");
         let dir = this.store.get("picSortDir");
         this.View.setPicSortParam(status, dcl, dir);
-        this.logger.info("sort param set:", status, DCL, dir);
+        this.logger.info("sort param set:", status, dcl, dir);
     }
 
     addBackupPath(fpath){
@@ -163,7 +163,7 @@ module.exports = class CacheModel{
             let backupSrcFolder = this.store.get("picBackupSrcPath");
             let distFolder = this.store.get("picBackupDistPath");
             let isKeep = this.store.get("picBackupKeep");
-            this.logger.info(backupSrcFolder, distFolder, isKeep);
+            this.logger.info("backup param\n", backupSrcFolder, distFolder, isKeep);
 
             if(backupSrcFolder == undefined || distFolder == undefined){
                 this.logger.error("folder wasn't set");
@@ -217,6 +217,7 @@ module.exports = class CacheModel{
 
     setSortJob(){
         let dir = this.store.get("picSortDir");
+        this.logger.info("sort job start");
         if (this.watcher) this.watcher.close();
         this.watcher = this.chokidar.watch(dir, {ignored: /[\/\\]\./, depth:0});
 

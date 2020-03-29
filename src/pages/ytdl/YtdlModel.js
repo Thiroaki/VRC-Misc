@@ -66,7 +66,8 @@ module.exports = class YtdlModel{
         }
     }
 
-    onRegist(status, month, hour){
+    onChangeUpdateJobParam(status, month, hour){
+        this.logger.info("update job param change:", status, month, hour);
         if(status){
             this.createJob(month, hour);
         }else{
@@ -91,14 +92,14 @@ module.exports = class YtdlModel{
             await this.updateYtdl();
         });
         this.updateJob.start();
-        this.logger.info("Job started", month, hour);
+        this.logger.info("ytdl job started", month, hour);
     }
     destroyJob(){
         this.ytdlJob.status = false;
         this.store.set("ytdlJob", this.ytdlJob);
         if(this.updateJob != undefined){
             this.updateJob.destroy();
-            this.logger.info("Job deleted");
+            this.logger.info("ytdl job deleted");
         }        
     }
 
@@ -114,8 +115,14 @@ module.exports = class YtdlModel{
 
     updateYtdl(){
         return new Promise((resolve, reject)=>{
+            this.logger.info("update start");
+            if(!this.store.get("vrcPath")){
+                this.logger.error("VRChat path is not set");
+                return resolve();
+            }
             if (this.store.get("remoteVer") == this.store.get("localVer")){
-                return resolve("ytdl is already latest");
+                this.logger.warn("ytdl is already latest");
+                return resolve();
             }
             
             let ytdl_path = this.store.get("vrcPath") + `\\VRChat_Data\\StreamingAssets\\youtube-dl.exe`;
@@ -123,11 +130,17 @@ module.exports = class YtdlModel{
             let checksum;
             //チェックサム検証
             this.request({method:"get", url:this.ChecksumDownloadUrl}, (err,res,body)=>{
-                if(err) {return reject("fail checksum download")};
+                if(err) {
+                    this.logger.error("checksum download fail");
+                    return reject("fail checksum download")
+                };
 
                 checksum = body.match(/\w+(?=\s+youtube-dl.exe)/g)[0];
                 this.request({method:"get", url:this.RemoteDownloadUrl, encoding:null}, (err, res, body)=>{
-                    if (err) {return reject("fail exe download")};
+                    if (err) {
+                        this.logger.error("ytdl download fail\n", err);
+                        return reject("fail exe download");
+                    };
                     
                     //リネームバックアップして保存
                     if(checksum == this.md5hex(body)){
@@ -136,6 +149,7 @@ module.exports = class YtdlModel{
                         this.localVersion = this.remoteVersion;
                         this.store.set("localVer", this.localVersion);
                     }
+                    this.logger.info("update done");
                     return resolve("update done");
                 });
             });
@@ -147,7 +161,7 @@ module.exports = class YtdlModel{
             //リモート
             const ytdlUrl = "https://api.github.com/repos/ytdl-org/youtube-dl/releases/latest";
             this.request({method:"get", url:ytdlUrl, json:true, headers:{'User-Agent':'VRC-Misc'}}, (err, res, json)=>{
-                if (err) {
+                if (err || !json.tag_name) {
                     this.logger.error("remote version check fail\n" + jqXHR.status);
                     return reject();
                 }
@@ -162,6 +176,7 @@ module.exports = class YtdlModel{
             });
             //ローカル
             let vrcPath = this.store.get("vrcPath");
+            if(!vrcPath){ return reject()}
             let ytdl_path = '"' + vrcPath + '\\VRChat_Data\\StreamingAssets\\youtube-dl.exe"';
             
             this.exec(ytdl_path+" --version", (err, out, stderr) => {

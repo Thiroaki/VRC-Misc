@@ -30,7 +30,7 @@ module.exports = class YtdlView{
         let status = $("#job-switch input[type='checkbox']").prop('checked');
         let month = $('#job-month').val();
         let hour = $('#job-hour').val();
-        this.Model.onRegist(status, month, hour);
+        this.Model.onChangeUpdateJobParam(status, month, hour);
     }
 
     setVersion(remote, local){
@@ -39,8 +39,6 @@ module.exports = class YtdlView{
     }
 
     setJobInfo(status, month, hour){
-        console.log(status, month, hour);
-        
         $('#job-month').val(month);
         $('#job-hour').val(hour);
 

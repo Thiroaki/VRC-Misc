@@ -53,6 +53,7 @@ module.exports = class CacheModel{
     }
 
     onChangeClearJobParam(status, month, hour, limit){
+        this.logger.info("cache job param:", status, month, hour, limit);
         if(status){
             this.createJob(month, hour, limit);
         }else{
@@ -77,14 +78,14 @@ module.exports = class CacheModel{
             this.clearCache(limit);
         });
         this.clearJob.start();
-        this.logger.info("Job started", month, hour, limit);
+        this.logger.info("cache job started", month, hour, limit);
     }
     destroyJob(){
         this.cacheJob.status = false
         this.store.set("cacheJob", this.cacheJob);
         if(this.clearJob != undefined){
             this.clearJob.destroy();
-            this.logger.info("Job deleted");
+            this.logger.info("cache job deleted");
         }
     }
 
@@ -94,6 +95,7 @@ module.exports = class CacheModel{
 
 
     clearCache(limit){
+        this.logger.info("cache clear start:", limit);
         let nowDate = new Date(Date.now());
         let cnt = 0;
 
@@ -101,7 +103,11 @@ module.exports = class CacheModel{
             let file = this.CacheFiles[i];
             let distDays = (nowDate - file.atime) / 24 * 60*60*1000;
             if (distDays > limit) {
-                this.fs.unlink(file.name, (err)=>{});
+                this.fs.unlink(file.name, (err)=>{
+                    if (err){
+                        this.logger.err("cache clear error\n", err);
+                    }
+                });
                 cnt++;
             }
         }

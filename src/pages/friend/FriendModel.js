@@ -28,7 +28,7 @@ module.exports = class FriendModel{
 
 
     onChangeLogParam(status, DCL, dir){
-        this.logger.info("save log param change:", status, dcl, dir);
+        this.logger.info("save log param change:", status, DCL, dir);
         if(status != undefined && DCL && dir){
             this.store.set("saveLogStatus", status);
             this.store.set("saveLogDir", dir);
@@ -50,6 +50,7 @@ module.exports = class FriendModel{
     }
 
     async savePlaylog(){
+        this.logger.info("play-log save start");
         const userName = this.store.get("username");
         const logFilePath = `C:/Users/${userName}/AppData/LocalLow/VRChat/VRChat`;
         const re = /output_log_(\d|-)*_(AM|PM)\.txt/;
@@ -110,6 +111,7 @@ module.exports = class FriendModel{
             }
             this.fs.appendFile(this.path.join(outDir,outFileName), outText, ()=>{});
             this.store.set("lastLogId", logId);
+            this.logger.info("play-log save done");
         }
 
     }
