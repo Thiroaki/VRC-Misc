@@ -59,8 +59,10 @@ function setPage(pid) {
                 break;
             case "pic":
                 PicPage.onSelect();
+                break;
             case "friend":
                 FriendPage.onSelect();
+                break;
         }
     }, 10);
 }

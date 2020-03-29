@@ -1,3 +1,5 @@
+const debug_mode = true;
+
 const { app, Menu, Tray, BrowserWindow, ipcMain, dialog } = require('electron');
 const fs = require("fs");
 const path = require('path');
@@ -10,12 +12,14 @@ let mainWindow;
 let forseQuit = false;
 let notifyUpdate = false;
 
-app.setLoginItemSettings({
-    openAtLogin: true,
-    openAsHidden: true
-});
-
-//require("electron-reload")(__dirname);
+if(debug_mode){
+    //require("electron-reload")(__dirname);
+}else{
+    app.setLoginItemSettings({
+        openAtLogin: true,
+        openAsHidden: true
+    });
+}
 
 store.set("username", process.env['username']);
 
@@ -44,7 +48,7 @@ function createWindow() {
     mainWindow.loadURL("file://" + __dirname + "/src/base.html");
 
     // 開発ツールを有効化
-    //mainWindow.webContents.openDevTools();
+    if(debug_mode) mainWindow.webContents.openDevTools();
 
     Menu.setApplicationMenu(null);
 
@@ -173,6 +177,8 @@ ipcMain.on("openDialogSelectDir", (e, arg)=>{
     });
     if(path){
         e.returnValue = path[0];
+    }else{
+        e.returnValue = undefined;
     }
 })
 

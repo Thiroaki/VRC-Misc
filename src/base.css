@@ -62,13 +62,14 @@ br{
 }
 
 .section-label{
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: bold;
     color: hsl(0, 0%, 100%);
     margin-bottom: 1rem;
 }
 .section-item-label{
     font-size: 0.7rem;
+    font-weight: bold;
     color: hsl(132, 2%, 60%);
 }
 .section-text{
@@ -131,7 +132,7 @@ hr{
 }
 
 /* === 丸部分のSTYLE（標準） =============================== */
-.switchArea #swImg {
+.switchArea .swImg {
     position       : absolute;            /* 親要素からの相対位置*/
     width          : 0.9rem;                /* 丸の横幅           */
     height         : 0.9rem;                /* 丸の高さ           */
@@ -144,7 +145,7 @@ hr{
 }
 
 /* === 丸部分のSTYLE（ONのとき） =========================== */
-.switchArea input[type="checkbox"]:checked ~ #swImg {
+.switchArea input[type="checkbox"]:checked ~ .swImg {
     transform      : translateX(1.4rem);    /* 丸も右へ移動       */
     background     : #5eb05e;             /* カーソルタブの背景 */
 }

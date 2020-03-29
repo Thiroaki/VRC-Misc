@@ -1,12 +1,75 @@
 <div class="main-content">
     <div class="container mb-4 p-0">
         <div class="section-label">
+            <span>写真・スクショ</span>
+        </div>
+        <div id="pic-sort">
+            <div class="mb-2">
+                <div class="row m-0 d-flex align-items-center">
+                    <div class="col px-0">
+                        <span class="text">写真を日付毎にまとめる</span>
+                    </div>
+                    <div class="col-1 px-0" style="height: 1.5rem;">
+                        <div id="pic-sort-switch" class="switchArea">
+                            <input type="checkbox" id="switch1">
+                            <label for="switch1"></label>
+                            <div class="swImg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-text">
+                    <span>まとめたいフォルダ直下のファイルが作成日時ごとにまとめられます。</span>
+                </div>
+            </div>
+            <div class="text row m-0 mb-2 d-flex align-items-end">
+                <div class="col-2 px-0 mr-2">
+                    <div class="section-item-label mb-1">
+                        <span>日付変更線</span>
+                    </div>
+                    <select id="pic-dcl" class="form-control">
+                        <option value="0">0時</option>
+                        <option value="1">1時</option>
+                        <option value="2">2時</option>
+                        <option value="3">3時</option>
+                        <option value="4">4時</option>
+                        <option value="5">5時</option>
+                        <option value="6">6時</option>
+                        <option value="7">7時</option>
+                        <option value="8">8時</option>
+                        <option value="9">9時</option>
+                    </select>
+                </div>
+                <div class="col px-0 mr-2">
+                    <div class="section-item-label mb-1">
+                        <span>まとめたいフォルダ</span>
+                    </div>
+                    <div class="bg-b4 mcard path-box d-flex align-items-center">
+                        <span id="pic-sort-dir"></span>
+                    </div>
+                </div>
+                <div class="">
+                    <button id="change-pic-sort-dir" class="btn btn-light" style="float: right;width: 4rem;">参照</button>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-div">
+        <hr>
+    </div>
+
+    <div class="container mb-4 p-0">
+        <div class="section-label">
             <span>バックアップ</span>
         </div>
         <div class="bg-b2 text">
             <div class="row m-0">
+                <div class="section-item-label mb-1">
+                    <span>バックアップ元</span>
+                </div>
                 <div class="bg-b4 m-0 p-2 col-12 mcard">
-                    <div id="bkup-folder">
+                    <div id="bkup-folder" style="font-size: 0.9rem;">
                         <!-- <div class="row mx-2 mb-1 pb-1 bkup-path">
                             <div class="col">D:/Picture</div>
                             <div class="col-1 float-right"><i class="fas fa-times px-1 clickable bkup-del"></i></div>
@@ -20,7 +83,7 @@
                             <div class="col-1 float-right"><i class="fas fa-times px-1 clickable bkup-del"></i></div>
                         </div> -->
                     </div>
-                    <div class="row mx-2 bkup-path-add">
+                    <div id="bkup-path-add" class="row mx-2">
                         <div class="col-12 text-center" style="font-size: 0.85rem;">
                             <i class="fas fa-folder-plus fa-2x px-3 clickable"></i>
                         </div>
@@ -28,9 +91,42 @@
                 </div>
             </div>
 
+            <div id="" class="text row m-0 mb-2 d-flex align-items-end">
+                <div class="col px-0 mr-2">
+                    <div class="section-item-label mb-1 mt-2">
+                        <span>バックアップ先</span>
+                    </div>
+                    <div class="bg-b4 mcard path-box d-flex align-items-center">
+                        <span id="bkup-dist-path"></span>
+                    </div>
+                </div>
+                <div class="">
+                    <button id="change-bkup-dist-path" class="btn btn-light" style="float: right;width: 4rem;">参照</button>
+                
+                </div>
+            </div>
+
+            <div class="mb-2 mt-3">
+                <div class="row m-0 d-flex align-items-center">
+                    <div class="col px-0">
+                        <span class="text">元のフォルダを維持する</span>
+                    </div>
+                    <div class="col-1 px-0" style="height: 1.5rem;">
+                        <div id="bkup-keep-switch" class="switchArea">
+                            <input type="checkbox" id="switch2">
+                            <label for="switch2"></label>
+                            <div class="swImg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-text">
+                    <span>バックアップ元のフォルダごとコピーします。</span>
+                </div>
+            </div>
+
             <div class="row m-0 mt-2">
                 <div class="col section-text">
-                    <span id="path"></span><span>\Picture\VRChat　の中のファイルがコピーされます。同じ名前は上書きされません。</span>
+
                 </div>
                 <div class="col-3 p-0 d-flex justify-content-end align-items-center">
                     <button id="pic-bkup" class="btn btn-light">
@@ -45,14 +141,7 @@
         </div>
     </div>
 
-    <!-- <div class="container mb-4 p-0">
-        <div class="section-label">
-            <span>日付ごとにまとめる</span>
-        </div>
-        <div class="p-3 bg-b2 text">
-            <div class="row m-0">
-
-            </div>
-        </div>
-    </div> -->
+    <div class="section-div">
+        <hr>
+    </div>
 </div>

@@ -26,6 +26,7 @@ module.exports = class FriendModel{
 
 
     onChangeLogParam(status, DCL, dir){
+        console.log(status, DCL, dir);
         if(status != undefined && DCL && dir){
             this.store.set("saveLogStatus", status);
             this.store.set("saveLogDir", dir);
@@ -108,6 +109,6 @@ module.exports = class FriendModel{
             this.store.set("lastLogId", logId);
         }
 
-    };
+    }
 
 }

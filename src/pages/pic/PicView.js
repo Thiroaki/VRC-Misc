@@ -1,7 +1,7 @@
 module.exports = class CacheView{
     constructor(model){
+        this.ipcRenderer = require("electron").ipcRenderer;
         this.Model = model;
-
     }
 
     setView(arg){
@@ -9,23 +9,51 @@ module.exports = class CacheView{
     }
 
     setUiEvents(){
-        $(".bkup-path-add").on("click", ()=>{
+        $("#bkup-path-add").on("click", ()=>{
             this.Model.onClickBuckupAddButton();
         });
         $("#pic-bkup").on("click", ()=>{
             this.Model.onClickBuckupButton();
         });
+        $("#change-bkup-dist-path").on("click", ()=>{
+            let path = this.ipcRenderer.sendSync("openDialogSelectDir", "C:\\");
+            if(path){
+                $("#bkup-dist-path").text(path);
+                this.Model.onChangeBuckupDistPath(path);
+            }
+        });
+        $("#bkup-keep-switch").on("change", ()=>{
+            let bool = $("#bkup-keep-switch input[type='checkbox']").prop("checked");
+            this.Model.onChangeBuckupKeep(bool);
+        });
+
+
+        $("#change-pic-sort-dir").on("click", ()=>{
+            let path = this.ipcRenderer.sendSync("openDialogSelectDir", process.env['USERPROFILE'] + "\\Pictures");
+            if(path){
+                $("#pic-sort-dir").text(path);
+                this.changePicSortParam();
+            }
+        });
+        $("#pic-sort").on("change", ()=>{
+            this.changePicSortParam();
+        });
+    }
+
+    changePicSortParam(){
+        let status = $("#pic-sort-switch input[type='checkbox']").prop('checked');
+        let dcl = $("#pic-dcl").val();
+        let path = $("#pic-sort-dir").text();
+        this.Model.onChangeSortParam(status, dcl, path);
     }
 
 
-
-
-    setBuckupFolder(folders){
+    setBuckupParam(srcPaths, distPath, keep){
         $("#bkup-folder").empty();
-        for(let i=0; i<folders.length; i++){
+        for(let i=0; i<srcPaths.length; i++){
             let div = `
-            <div class="row mx-2 mb-1 pb-1 bkup-path-${i}">
-                <div class="col">${folders[i]}</div>
+            <div id="bkup-src-path-${i}" class="row mx-1 mb-1 pb-1">
+                <div class="col px-2"><span>${srcPaths[i]}</span></div>
                 <div class="col-1 float-right"><i id="${i}" class="fas fa-times px-1 clickable bkup-del"></i></div>
             </div>
             `;
@@ -33,8 +61,10 @@ module.exports = class CacheView{
         }
         $(".bkup-del").on("click", (e)=>{
             this.Model.onClickBuckupDeleteButton(e.target.id);
-            $(".bkup-path-"+e.target.id).remove();
+            $("#bkup-src-path-"+e.target.id).remove();
         });
+        $("#bkup-dist-path").text(distPath);
+        $("#bkup-keep-switch input[type='checkbox']").prop("checked", keep);
     }
 
     setBkupButtonEnable(){
@@ -46,5 +76,12 @@ module.exports = class CacheView{
         $("#pic-bkup").prop("disabled", true);
         $("#pic-bkup > #btn-enable").hide();
         $("#pic-bkup > #btn-disable").fadeIn(200);
+    }
+
+    
+    setPicSortParam(status, dcl, path){
+        $("#pic-sort-switch input[type='checkbox']").prop('checked', status);
+        $("#pic-dcl").val(dcl);
+        $("#pic-sort-dir").text(path);
     }
 }

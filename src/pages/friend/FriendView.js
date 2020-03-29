@@ -11,10 +11,12 @@ module.exports = class FriendView{
 
     setUiEvents(){
         $("#change-log-save-dir").on("click", ()=>{
-            let path = this.ipcRenderer.sendSync("openDialogSelectDir", ".");
-            this.logPath = path;
-            $("#log-save-dir").text(path);
-            this.changeSaveLogParam();
+            let path = this.ipcRenderer.sendSync("openDialogSelectDir", process.env["userprofile"]+"\\Documents");
+            if(path){
+                this.logPath = path;
+                $("#log-save-dir").text(path);
+                this.changeSaveLogParam();
+            }
         });
         $("#save-log").on("change", ()=>{
             this.changeSaveLogParam();

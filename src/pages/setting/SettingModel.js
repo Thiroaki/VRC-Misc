@@ -18,7 +18,7 @@ module.exports = class SettingModel{
 
     onClickChangeVRCPath(){
         let path = this.ipcRenderer.sendSync("openDialogSelectDir", "C:\\");
-        this.updateVRCPath(path);
+        if(path) this.updateVRCPath(path);
     }
 
     updateVRCPath(newPath){

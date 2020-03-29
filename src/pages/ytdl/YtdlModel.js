@@ -22,6 +22,9 @@ module.exports = class YtdlModel{
 
         // 起動時処理
         this.checkYtdlVersion();
+        setInterval(()=>{
+            this.checkYtdlVersion();
+        }, 2*60*60*1000);
 
         this.ytdlJob = this.store.get("ytdlJob");
         if(this.ytdlJob != undefined && this.ytdlJob.status){
