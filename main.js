@@ -1,4 +1,4 @@
-const debug_mode = false;
+const debug_mode = true;
 
 const { app, Menu, Tray, BrowserWindow, ipcMain, dialog } = require('electron');
 const fs = require("fs");
