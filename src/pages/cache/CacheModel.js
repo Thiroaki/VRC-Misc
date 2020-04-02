@@ -18,6 +18,9 @@ module.exports = class CacheModel{
         this.clearJob;
 
         this.loadCacheStatus();
+        setInterval(()=>{
+            this.loadCacheStatus();
+        }, 60*60*1000);
 
         this.cacheJob = this.store.get("cacheJob");
         if(this.cacheJob != undefined && this.cacheJob.status){

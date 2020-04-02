@@ -46,7 +46,7 @@ module.exports = class FriendModel{
         let dcl = this.store.get("saveLogDCL");
         let dir = this.store.get("saveLogDir");
         this.View.setSaveLogParam(status, dcl, dir);
-        this.logger.info("save log param set:", status, dcl, dir);
+        this.logger.debug("save log param set:", status, dcl, dir);
     }
 
     async savePlaylog(){

@@ -100,7 +100,7 @@ module.exports = class CacheModel{
         if(!srcPaths) srcPaths = [];
         if(!distPath) distPath = "";
         this.View.setBackupParam(srcPaths, distPath, keep);
-        this.logger.info("backup param set:", srcPaths, distPath, keep);
+        this.logger.debug("backup param set:", srcPaths, distPath, keep);
     }
 
     setSortParam(){
@@ -108,7 +108,7 @@ module.exports = class CacheModel{
         let dcl = this.store.get("picSortDCL");
         let dir = this.store.get("picSortDir");
         this.View.setPicSortParam(status, dcl, dir);
-        this.logger.info("sort param set:", status, dcl, dir);
+        this.logger.debug("sort param set:", status, dcl, dir);
     }
 
     addBackupPath(fpath){

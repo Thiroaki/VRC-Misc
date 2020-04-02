@@ -1,6 +1,6 @@
-const debug_mode = true;
+const debug_mode = false;
 
-const { app, Menu, Tray, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, Menu, Tray, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const fs = require("fs");
 const path = require('path');
 const exec = require('child_process').exec;
@@ -31,7 +31,7 @@ if(debug_mode){
 
 store.set("username", process.env['username']);
 
-logger.debug("App Launch");
+logger.info("App Launch");
 
 function createWindow() {
     if(mainWindow && !mainWindow.isDestroyed()){
@@ -45,6 +45,7 @@ function createWindow() {
         wb = {width:860, height:530};
     }
     mainWindow = new BrowserWindow({
+        icon: __dirname + "/icon.ico",
         x:wb.x, y:wb.y, width: wb.width, height: wb.height,
         webPreferences: { nodeIntegration : true}});
     mainWindow.setMinimumSize(860, 530);

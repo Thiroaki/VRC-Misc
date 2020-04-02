@@ -1,5 +1,6 @@
 module.exports = class YtdlView{
     constructor(model){
+        this.electron = require("electron");
         this.Model = model;
     }
 
@@ -14,6 +15,9 @@ module.exports = class YtdlView{
         //情報
         $("#ytdl-update").on("click", ()=>{
             this.Model.onClickUpdateButton();
+        });
+        $("#ytdl-verify").on("click", ()=>{
+            this.electron.shell.openExternal("https://note.com/okouu/n/n632ed8690706");
         });
 
         //定期実行

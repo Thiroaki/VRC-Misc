@@ -13,6 +13,10 @@ html > span{
     color: hsl(0, 0%, 95%);
 }
 
+a{
+    color: #00aaff;
+}
+
 span{
     user-select: none;
 }
