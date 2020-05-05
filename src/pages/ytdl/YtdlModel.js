@@ -27,13 +27,13 @@ module.exports = class YtdlModel{
             this.checkYtdlVersion();
         }, 2*60*60*1000);
 
-        this.ytdlJob = this.store.get("ytdlJob");
-        if(this.ytdlJob != undefined && this.ytdlJob.status){
-            this.createJob(this.ytdlJob.month, this.ytdlJob.hour);
-        }else{
-            this.ytdlJob = {status:false, month:"1", hour:"0"}
-            this.store.set("ytdlJob", this.ytdlJob);
-        }
+        // this.ytdlJob = this.store.get("ytdlJob");
+        // if(this.ytdlJob != undefined && this.ytdlJob.status){
+        //     this.createJob(this.ytdlJob.month, this.ytdlJob.hour);
+        // }else{
+        //     this.ytdlJob = {status:false, month:"1", hour:"0"}
+        //     this.store.set("ytdlJob", this.ytdlJob);
+        // }
     }
 
 
@@ -46,7 +46,7 @@ module.exports = class YtdlModel{
         this.View.setView();
         this.View.setUiEvents();
         this.updateVersionInfo()
-        this.setJobInfo();
+        //this.setJobInfo();
     }
 
 
